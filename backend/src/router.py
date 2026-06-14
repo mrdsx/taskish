@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,7 +10,7 @@ from src.session import DB_Task, get_session
 router = APIRouter(prefix="/tasks")
 
 # TODO
-# 1. implement routes
+# 1. implement routes (completed)
 # 2. implement security
 
 
@@ -19,6 +19,7 @@ async def get_tasks(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
     result = await session.execute(select(DB_Task))
+
     return result.scalars().all()
 
 
@@ -47,20 +48,44 @@ async def create_task(
     session.add(db_task)
     await session.commit()
 
-    result = await session.execute(select(DB_Task).where(DB_Task.id == db_task.id))
-    created_task = result.scalar()
-    if created_task is None:
+    return db_task
+
+
+@router.put("/{task_id}", response_model=TaskOut)
+async def update_task_by_id(
+    task_id: int,
+    task: TaskIn,
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
+    result = await session.execute(select(DB_Task).where(DB_Task.id == task_id))
+    existing_task = result.scalar()
+    if existing_task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Task not found.",
         )
 
-    return created_task
+    existing_task.title = task.title
+    existing_task.sub_tasks = task.sub_tasks
+    await session.commit()
 
-
-@router.put("/{task_id}")
-async def update_task_by_id(task_id: int): ...
+    return existing_task
 
 
 @router.delete("/{task_id}")
-async def delete_task_by_id(task_id: int): ...
+async def delete_task_by_id(
+    task_id: int,
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> Response:
+    result = await session.execute(select(DB_Task).where(DB_Task.id == task_id))
+    existing_task = result.scalar()
+    if existing_task is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found.",
+        )
+
+    await session.delete(existing_task)
+    await session.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
