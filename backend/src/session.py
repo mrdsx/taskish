@@ -5,10 +5,9 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-# TODO: extract database url segments (user, password, etc.)
-DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/database"
+from src.settings import settings
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(settings.db_url)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 

@@ -9,10 +9,6 @@ from src.session import DB_Task, get_session
 
 router = APIRouter(prefix="/tasks")
 
-# TODO
-# 1. implement routes (completed)
-# 2. implement security
-
 
 @router.get("/", response_model=list[TaskOut])
 async def get_tasks(
