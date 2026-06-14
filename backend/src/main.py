@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from src.lifespan import lifespan
+from src.middleware import AuthMiddleware
 from src.router import router as tasks_router
 
 app = FastAPI(lifespan=lifespan)
@@ -11,4 +12,5 @@ def read_root():
     return {"status": "ok"}
 
 
+app.add_middleware(AuthMiddleware)
 app.include_router(tasks_router)
