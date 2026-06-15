@@ -126,12 +126,12 @@ func HandleDeleteTasksById(ids []int) {
 	var wg sync.WaitGroup
 	for _, taskId := range taskIds {
 		wg.Add(1)
-		go HandleDeleteTaskById(taskId, &wg)
+		go handleDeleteTaskById(taskId, &wg)
 	}
 	wg.Wait()
 }
 
-func HandleDeleteTaskById(id int, wg *sync.WaitGroup) {
+func handleDeleteTaskById(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	res, err := FetchApi("DELETE", "/tasks/"+strconv.Itoa(id))

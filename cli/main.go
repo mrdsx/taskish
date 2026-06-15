@@ -76,14 +76,18 @@ func main() {
 	restoreTaskCmd := &cobra.Command{
 		Use:   "restore",
 		Short: "Restores recently deleted task",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			taskId, err := strconv.Atoi(args[0])
-			if err != nil {
-				log.Fatalf("invalid argument %q: must be a valid integer", args[0])
+			ids := []int{}
+			for _, arg := range args {
+				taskId, err := strconv.Atoi(arg)
+				if err != nil {
+					log.Fatalf("invalid argument %q: must be a valid integer", arg)
+				}
+				ids = append(ids, taskId)
 			}
 
-			HandleRestoreTask(taskId)
+			HandleRestoreTasksById(ids)
 		},
 	}
 

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -35,5 +36,11 @@ class TaskOut(BaseModel):
     id: int
     title: str
     sub_tasks: list[str]
+
+    model_config = api_model_config
+
+
+class DeletedTaskOut(TaskOut):
+    expires_at: datetime
 
     model_config = api_model_config

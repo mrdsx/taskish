@@ -8,6 +8,7 @@ from src.trash_router import router as trash_router
 app = FastAPI(lifespan=lifespan)
 
 
+# TODO: implement old deleted tasks cleanup
 @app.get("/")
 def read_root():
     return {"status": "ok"}
