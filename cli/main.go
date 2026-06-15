@@ -4,8 +4,11 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
 )
+
+var Validate = validator.New()
 
 func main() {
 	rootCmd := &cobra.Command{

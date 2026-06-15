@@ -13,8 +13,8 @@ type InitConfig struct {
 func HandleInit(initConfig InitConfig) {
 	configDir := GetConfigDir()
 	if _, err := os.Stat(configDir); err == nil && !initConfig.forceOverride {
-		res := Prompt("Config file already exists. Do you wish to override it? [y/N] ")
-		if res != "y" {
+		answer := Prompt("Config file already exists. Do you wish to override it? [y/N] ")
+		if answer != "y" {
 			os.Exit(0)
 		}
 	}
