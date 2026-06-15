@@ -53,6 +53,11 @@ func HandleGetAllTasks() {
 		}
 	}
 
+	if len(tasks) == 0 {
+		fmt.Println("Task list is empty")
+		return
+	}
+
 	taskStrings := []string{}
 	for index, task := range tasks {
 		taskString := getTaskString(index, task)
