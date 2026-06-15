@@ -6,7 +6,6 @@ from src.settings import settings
 
 # TODO
 # ? Rate limiting (for preventing brute-force)
-# ? Enforce HTTPS (for encryption)
 # ? Logging       (for auditing auth attempts)
 # ? Long token - must-have
 # ? Timing attack prevention
