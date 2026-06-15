@@ -1,6 +1,13 @@
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic.alias_generators import to_camel
+
+api_model_config = ConfigDict(
+    alias_generator=to_camel,
+    validate_by_alias=True,
+    validate_by_name=True,
+)
 
 
 class TaskIn(BaseModel):
@@ -21,8 +28,12 @@ class TaskIn(BaseModel):
         valid_tasks = filter(lambda task: task != "", mapped_tasks)
         return list(valid_tasks)
 
+    model_config = api_model_config
+
 
 class TaskOut(BaseModel):
     id: int
     title: str
     sub_tasks: list[str]
+
+    model_config = api_model_config
