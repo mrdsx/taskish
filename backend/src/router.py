@@ -10,11 +10,20 @@ from src.session import DB_Task, get_session
 router = APIRouter(prefix="/tasks")
 
 
+@router.get("/trash", response_model=list[TaskOut])
+async def get_tasks_from_trash(
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
+    result = await session.execute(select(DB_Task).where(DB_Task.deleted.is_(True)))
+
+    return result.scalars().all()
+
+
 @router.get("/", response_model=list[TaskOut])
 async def get_tasks(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    result = await session.execute(select(DB_Task))
+    result = await session.execute(select(DB_Task).where(DB_Task.deleted.is_(False)))
 
     return result.scalars().all()
 
@@ -24,7 +33,9 @@ async def get_task_by_id(
     task_id: int,
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    result = await session.execute(select(DB_Task).where(DB_Task.id == task_id))
+    result = await session.execute(
+        select(DB_Task).where(DB_Task.id == task_id, DB_Task.deleted.is_(False))
+    )
     existing_task = result.scalar()
     if existing_task is None:
         raise HTTPException(
@@ -53,7 +64,9 @@ async def update_task_by_id(
     task: TaskIn,
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    result = await session.execute(select(DB_Task).where(DB_Task.id == task_id))
+    result = await session.execute(
+        select(DB_Task).where(DB_Task.id == task_id, DB_Task.deleted.is_(False))
+    )
     existing_task = result.scalar()
     if existing_task is None:
         raise HTTPException(
@@ -73,7 +86,9 @@ async def delete_task_by_id(
     task_id: int,
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> Response:
-    result = await session.execute(select(DB_Task).where(DB_Task.id == task_id))
+    result = await session.execute(
+        select(DB_Task).where(DB_Task.id == task_id, DB_Task.deleted.is_(False))
+    )
     existing_task = result.scalar()
     if existing_task is None:
         raise HTTPException(
@@ -81,7 +96,7 @@ async def delete_task_by_id(
             detail="Task not found.",
         )
 
-    await session.delete(existing_task)
+    existing_task.deleted = True
     await session.commit()
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)

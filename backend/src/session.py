@@ -26,3 +26,4 @@ class DB_Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
     sub_tasks: Mapped[list[str]] = mapped_column(ARRAY(String), nullable=True)
+    deleted: Mapped[bool] = mapped_column(default=False, nullable=False)
