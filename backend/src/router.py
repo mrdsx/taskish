@@ -10,20 +10,13 @@ from src.session import DB_Task, get_session
 router = APIRouter(prefix="/tasks")
 
 
-@router.get("/trash", response_model=list[TaskOut])
-async def get_tasks_from_trash(
-    session: Annotated[AsyncSession, Depends(get_session)],
-):
-    result = await session.execute(select(DB_Task).where(DB_Task.deleted.is_(True)))
-
-    return result.scalars().all()
-
-
 @router.get("/", response_model=list[TaskOut])
 async def get_tasks(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    result = await session.execute(select(DB_Task).where(DB_Task.deleted.is_(False)))
+    result = await session.execute(
+        select(DB_Task).where(DB_Task.deleted.is_(False)).order_by(DB_Task.id)
+    )
 
     return result.scalars().all()
 
