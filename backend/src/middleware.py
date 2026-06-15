@@ -4,19 +4,21 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 
 from src.settings import settings
 
+# TODO
+# ? Rate limiting (for preventing brute-force)
+# ? Enforce HTTPS (for encryption)
+# ? Logging       (for auditing auth attempts)
+# ? Long token - must-have
+# ? Timing attack prevention
+
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint):
         auth_token = request.headers.get("auth-token")
-        if auth_token is None:
+        if auth_token != settings.auth_token:
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"detail": "Auth token is not provided."},
-            )
-        elif auth_token != settings.auth_token:
-            return JSONResponse(
-                status_code=status.HTTP_403_FORBIDDEN,
-                content={"detail": "Invalid auth token."},
+                content={"detail": "Invalid credentials."},
             )
 
         return await call_next(request)
