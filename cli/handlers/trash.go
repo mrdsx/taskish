@@ -42,7 +42,7 @@ func HandleGetTrash() {
 	}
 
 	if len(deletedTasks) == 0 {
-		fmt.Println("Empty trash")
+		fmt.Println("Trash is empty")
 	}
 
 	printTasks(tasks)
