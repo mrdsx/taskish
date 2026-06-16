@@ -11,18 +11,21 @@ import (
 	"taskish/lib"
 )
 
-type TaskIn struct {
-	Title    string   `json:"title"`
-	SubTasks []string `json:"subTasks"`
-}
-
 type Task struct {
-	Id       int      `json:"id"       validate:"required"`
-	Title    string   `json:"title"    validate:"required"`
-	SubTasks []string `json:"subTasks" validate:"required"`
+	Id int `json:"id" validate:"required"`
+	TaskIn
 }
 
 func (t Task) Validate() error {
+	return lib.Validate.Struct(t)
+}
+
+type TaskIn struct {
+	Title    string   `json:"title"    validate:"required,min=1"`
+	SubTasks []string `json:"subTasks" validate:"required"`
+}
+
+func (t TaskIn) Validate() error {
 	return lib.Validate.Struct(t)
 }
 
@@ -90,7 +93,14 @@ func HandleGetTaskById(id int) {
 }
 
 func HandleAddTask(title string, subTasks []string) {
-	jsonBytes, err := json.Marshal(TaskIn{Title: title, SubTasks: subTasks})
+	taskIn := TaskIn{Title: title, SubTasks: subTasks}
+	taskIn.Title = strings.TrimSpace(taskIn.Title)
+	err := taskIn.Validate()
+	if err != nil {
+		log.Fatalf("Invalid payload: %v\n", err)
+	}
+
+	jsonBytes, err := json.Marshal(taskIn)
 	if err != nil {
 		panic(err)
 	}
@@ -108,7 +118,7 @@ func HandleAddTask(title string, subTasks []string) {
 	defer res.Body.Close()
 
 	// Example output: Added task "batman"
-	fmt.Printf("Added task \"%s\"\n", title)
+	fmt.Printf("Added task \"%s\"\n", taskIn.Title)
 }
 
 func HandleDeleteTasksById(ids []int) {
