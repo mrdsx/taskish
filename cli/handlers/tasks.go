@@ -1,15 +1,14 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"slices"
 	"strconv"
 	"strings"
 	"sync"
-	"time"
+	"taskish/lib"
 )
 
 type Task struct {
@@ -19,10 +18,8 @@ type Task struct {
 }
 
 func (t Task) Validate() error {
-	return Validate.Struct(t)
+	return lib.Validate.Struct(t)
 }
-
-var client *http.Client = &http.Client{Timeout: 10 * time.Second}
 
 func getTaskString(index int, task Task) string {
 	taskString := fmt.Sprintf("%d. %s (%d)", index+1, task.Title, task.Id)
@@ -38,7 +35,7 @@ func getTaskString(index int, task Task) string {
 }
 
 func HandleGetAllTasks() {
-	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/tasks"})
+	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/tasks"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -67,10 +64,10 @@ func HandleGetAllTasks() {
 }
 
 func HandleGetTaskById(id int) {
-	res, err := FetchApi(FetchConfig{
+	res, err := lib.FetchApi(lib.FetchConfig{
 		Method: "GET",
 		Path:   "/tasks/" + strconv.Itoa(id),
-		Overrides: Overrides{
+		Overrides: lib.Overrides{
 			NotFound: "Task not found",
 		},
 	})
@@ -90,7 +87,7 @@ func HandleGetTaskById(id int) {
 }
 
 func HandleDeleteTasksById(ids []int) {
-	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/tasks"})
+	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/tasks"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -124,7 +121,7 @@ func HandleDeleteTasksById(ids []int) {
 
 	fmt.Println("You're about to delete the following tasks:")
 	fmt.Println(strings.Join(taskStrings, "\n"))
-	answer := Prompt("Do you confirm? [y/N] ")
+	answer := lib.Prompt("Do you confirm? [y/N] ")
 	if answer != "y" {
 		return
 	}
@@ -140,7 +137,7 @@ func HandleDeleteTasksById(ids []int) {
 func handleDeleteTaskById(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	res, err := FetchApi(FetchConfig{Method: "DELETE", Path: "/tasks/" + strconv.Itoa(id)})
+	res, err := lib.FetchApi(lib.FetchConfig{Method: "DELETE", Path: "/tasks/" + strconv.Itoa(id)})
 	if err != nil {
 		fmt.Println(err)
 		return

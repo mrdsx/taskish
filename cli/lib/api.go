@@ -1,8 +1,9 @@
-package main
+package lib
 
 import (
 	"errors"
 	"net/http"
+	"time"
 )
 
 type FetchConfig struct {
@@ -14,6 +15,8 @@ type FetchConfig struct {
 type Overrides struct {
 	NotFound string
 }
+
+var client *http.Client = &http.Client{Timeout: 10 * time.Second}
 
 func FetchApi(fetchConfig FetchConfig) (*http.Response, error) {
 	config := GetConfig()

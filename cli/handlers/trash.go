@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"taskish/lib"
 )
 
 type DeletedTask struct {
@@ -17,11 +18,11 @@ type DeletedTask struct {
 }
 
 func (t DeletedTask) Validate() error {
-	return Validate.Struct(t)
+	return lib.Validate.Struct(t)
 }
 
 func HandleGetTrash() {
-	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/trash"})
+	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -45,7 +46,7 @@ func HandleGetTrash() {
 }
 
 func HandleRestoreTasksById(ids []int) {
-	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/trash"})
+	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -79,7 +80,7 @@ func HandleRestoreTasksById(ids []int) {
 
 	fmt.Println("You're about to restore the following tasks:")
 	fmt.Println(strings.Join(taskStrings, "\n"))
-	answer := Prompt("Do you confirm? [y/N] ")
+	answer := lib.Prompt("Do you confirm? [y/N] ")
 	if answer != "y" {
 		return
 	}
@@ -95,7 +96,7 @@ func HandleRestoreTasksById(ids []int) {
 func handleRestoreTaskById(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	res, err := FetchApi(FetchConfig{Method: "POST", Path: "/trash/" + strconv.Itoa(id)})
+	res, err := lib.FetchApi(lib.FetchConfig{Method: "POST", Path: "/trash/" + strconv.Itoa(id)})
 	if err != nil {
 		fmt.Println(err)
 		return

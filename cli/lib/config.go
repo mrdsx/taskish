@@ -1,8 +1,9 @@
-package main
+package lib
 
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -31,10 +32,9 @@ func GetConfig() Config {
 	if _, err := os.Stat(configDir); errors.Is(err, os.ErrNotExist) {
 		answer := Prompt("Config is not set. Do you wish to initialize it? [y/N] ")
 		if answer == "y" {
-			HandleInit(InitConfig{forceOverride: true})
-		} else {
-			os.Exit(0)
+			fmt.Println("Run `taskish init` command to initialize config")
 		}
+		os.Exit(0)
 	}
 
 	configFile, err := os.Open(configDir)

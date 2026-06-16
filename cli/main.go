@@ -3,12 +3,10 @@ package main
 import (
 	"log"
 	"strconv"
+	"taskish/handlers"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
 )
-
-var Validate = validator.New()
 
 func main() {
 	rootCmd := &cobra.Command{
@@ -20,24 +18,24 @@ func main() {
 		Use:   "init",
 		Short: "Initialize config for using CLI client",
 		Run: func(cmd *cobra.Command, args []string) {
-			HandleInit(InitConfig{})
+			handlers.HandleInit(handlers.InitConfig{})
 		},
 	}
 
 	tasksCmd := &cobra.Command{
-		Use:   "tasks [command]",
+		Use:   "tasks [...taskId]",
 		Short: "Manage tasks",
 		Args:  cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				HandleGetAllTasks()
+				handlers.HandleGetAllTasks()
 			} else {
 				taskId, err := strconv.Atoi(args[0])
 				if err != nil {
 					log.Fatalf("invalid argument %q: must be a valid integer", args[0])
 				}
 
-				HandleGetTaskById(taskId)
+				handlers.HandleGetTaskById(taskId)
 			}
 		},
 	}
@@ -57,7 +55,7 @@ func main() {
 				ids = append(ids, taskId)
 			}
 
-			HandleDeleteTasksById(ids)
+			handlers.HandleDeleteTasksById(ids)
 		},
 	}
 
@@ -65,7 +63,7 @@ func main() {
 		Use:   "trash",
 		Short: "Get recently deleted tasks",
 		Run: func(cmd *cobra.Command, args []string) {
-			HandleGetTrash()
+			handlers.HandleGetTrash()
 		},
 	}
 
@@ -83,7 +81,7 @@ func main() {
 				ids = append(ids, taskId)
 			}
 
-			HandleRestoreTasksById(ids)
+			handlers.HandleRestoreTasksById(ids)
 		},
 	}
 

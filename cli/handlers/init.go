@@ -1,27 +1,28 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
 	"log"
 	"os"
+	"taskish/lib"
 )
 
 type InitConfig struct {
-	forceOverride bool
+	ForceOverride bool
 }
 
 func HandleInit(initConfig InitConfig) {
-	configDir := GetConfigDir()
-	if _, err := os.Stat(configDir); err == nil && !initConfig.forceOverride {
-		answer := Prompt("Config file already exists. Do you wish to override it? [y/N] ")
+	configDir := lib.GetConfigDir()
+	if _, err := os.Stat(configDir); err == nil && !initConfig.ForceOverride {
+		answer := lib.Prompt("Config file already exists. Do you wish to override it? [y/N] ")
 		if answer != "y" {
 			os.Exit(0)
 		}
 	}
 
-	apiUrl := Prompt("Enter API URL: ")
-	authToken := Prompt("Enter auth token: ")
-	config := &Config{
+	apiUrl := lib.Prompt("Enter API URL: ")
+	authToken := lib.Prompt("Enter auth token: ")
+	config := &lib.Config{
 		ApiUrl:    apiUrl,
 		AuthToken: authToken,
 	}
