@@ -1,7 +1,7 @@
 from collections.abc import AsyncGenerator
 from datetime import datetime
 
-from sqlalchemy import String, null
+from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -27,5 +27,5 @@ class DB_Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
     sub_tasks: Mapped[list[str]] = mapped_column(ARRAY(String))
-    expires_at: Mapped[datetime | None] = mapped_column(default=null, nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(default=None, nullable=True)
     deleted: Mapped[bool] = mapped_column(default=False)
