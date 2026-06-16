@@ -118,7 +118,7 @@ func HandleAddTask(title string, subTasks []string) {
 	defer res.Body.Close()
 
 	// Example output: Added task "batman"
-	fmt.Printf("Added task \"%s\"\n", taskIn.Title)
+	fmt.Printf("Added task %q\n", taskIn.Title)
 }
 
 func HandleDeleteTasksById(ids []int) {
