@@ -38,7 +38,7 @@ func getTaskString(index int, task Task) string {
 }
 
 func HandleGetAllTasks() {
-	res, err := FetchApi("GET", "/tasks")
+	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/tasks"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -67,7 +67,13 @@ func HandleGetAllTasks() {
 }
 
 func HandleGetTaskById(id int) {
-	res, err := FetchApi("GET", "/tasks/"+strconv.Itoa(id))
+	res, err := FetchApi(FetchConfig{
+		Method: "GET",
+		Path:   "/tasks/" + strconv.Itoa(id),
+		Overrides: Overrides{
+			NotFound: "Task not found",
+		},
+	})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -84,7 +90,7 @@ func HandleGetTaskById(id int) {
 }
 
 func HandleDeleteTasksById(ids []int) {
-	res, err := FetchApi("GET", "/tasks")
+	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/tasks"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -134,7 +140,7 @@ func HandleDeleteTasksById(ids []int) {
 func handleDeleteTaskById(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	res, err := FetchApi("DELETE", "/tasks/"+strconv.Itoa(id))
+	res, err := FetchApi(FetchConfig{Method: "DELETE", Path: "/tasks/" + strconv.Itoa(id)})
 	if err != nil {
 		fmt.Println(err)
 		return

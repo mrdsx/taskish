@@ -5,10 +5,20 @@ import (
 	"net/http"
 )
 
-func FetchApi(method string, path string) (*http.Response, error) {
+type FetchConfig struct {
+	Method    string
+	Path      string
+	Overrides Overrides
+}
+
+type Overrides struct {
+	NotFound string
+}
+
+func FetchApi(fetchConfig FetchConfig) (*http.Response, error) {
 	config := GetConfig()
 
-	req, _ := http.NewRequest(method, config.ApiUrl+path, nil)
+	req, _ := http.NewRequest(fetchConfig.Method, config.ApiUrl+fetchConfig.Path, nil)
 	req.Header.Set(AuthTokenHeader, config.AuthToken)
 	res, err := client.Do(req)
 	if err != nil {
@@ -16,7 +26,10 @@ func FetchApi(method string, path string) (*http.Response, error) {
 	} else if res.StatusCode == 401 {
 		return nil, errors.New("Unauthenticated")
 	} else if res.StatusCode == 404 {
-		return nil, errors.New("Resource not found")
+		if fetchConfig.Overrides.NotFound == "" {
+			fetchConfig.Overrides.NotFound = "Resource not found"
+		}
+		return nil, errors.New(fetchConfig.Overrides.NotFound)
 	} else if res.StatusCode == 500 {
 		return nil, errors.New("Internal server error")
 	} else if res.StatusCode >= 400 && res.StatusCode <= 599 {

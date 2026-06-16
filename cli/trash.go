@@ -21,7 +21,7 @@ func (t DeletedTask) Validate() error {
 }
 
 func HandleGetTrash() {
-	res, err := FetchApi("GET", "/trash")
+	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -45,7 +45,7 @@ func HandleGetTrash() {
 }
 
 func HandleRestoreTasksById(ids []int) {
-	res, err := FetchApi("GET", "/trash")
+	res, err := FetchApi(FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -95,7 +95,7 @@ func HandleRestoreTasksById(ids []int) {
 func handleRestoreTaskById(id int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	res, err := FetchApi("POST", "/trash/"+strconv.Itoa(id))
+	res, err := FetchApi(FetchConfig{Method: "POST", Path: "/trash/" + strconv.Itoa(id)})
 	if err != nil {
 		fmt.Println(err)
 		return
