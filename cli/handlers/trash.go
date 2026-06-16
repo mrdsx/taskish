@@ -48,6 +48,29 @@ func HandleGetTrash() {
 	printTasks(tasks)
 }
 
+func HandleGetDeletedTaskById(id int) {
+	res, err := lib.FetchApi(lib.FetchConfig{
+		Method: "GET",
+		Path:   "/trash/" + strconv.Itoa(id),
+		Overrides: lib.Overrides{
+			NotFound: "Task not found",
+		},
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer res.Body.Close()
+
+	var task DeletedTask
+	err = json.NewDecoder(res.Body).Decode(&task)
+	if err != nil {
+		log.Fatalf("Response body validation failed:\n%v", err)
+	}
+
+	fmt.Println(GetTaskString(task.Task))
+}
+
 func HandleRestoreTasksById(ids []int) {
 	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {

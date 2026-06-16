@@ -31,7 +31,7 @@ var TasksCmd = &cobra.Command{
 		} else {
 			taskId, err := strconv.Atoi(args[0])
 			if err != nil {
-				log.Fatalf("invalid argument %q: must be a valid integer", args[0])
+				log.Fatalf("Invalid argument %q: must be a valid integer", args[0])
 			}
 
 			handlers.HandleGetTaskById(taskId)
@@ -96,7 +96,7 @@ var deleteTaskByIdCmd = &cobra.Command{
 		for _, arg := range args {
 			taskId, err := strconv.Atoi(arg)
 			if err != nil {
-				log.Fatalf("invalid argument %q: must be a valid integer", arg)
+				log.Fatalf("Invalid argument %q: must be a valid integer", arg)
 			}
 			ids = append(ids, taskId)
 		}

@@ -12,8 +12,9 @@ import (
 )
 
 type Task struct {
-	Id int `json:"id" validate:"required"`
-	TaskIn
+	Id       int      `json:"id"       validate:"required"`
+	Title    string   `json:"title"    validate:"required,min=1"`
+	SubTasks []string `json:"subTasks" validate:"required"`
 }
 
 func (t Task) Validate() error {
@@ -29,7 +30,7 @@ func (t TaskIn) Validate() error {
 	return lib.Validate.Struct(t)
 }
 
-func getTaskString(task Task) string {
+func GetTaskString(task Task) string {
 	taskString := fmt.Sprintf("%s (%d)", task.Title, task.Id)
 	subTasks := strings.Join(task.SubTasks, "\n  ")
 	if len(subTasks) > 0 {
@@ -89,7 +90,7 @@ func HandleGetTaskById(id int) {
 		log.Fatalf("Response body validation failed:\n%v", err)
 	}
 
-	fmt.Println(getTaskString(task))
+	fmt.Println(GetTaskString(task))
 }
 
 func HandleAddTask(title string, subTasks []string) {
