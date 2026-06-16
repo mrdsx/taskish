@@ -122,7 +122,6 @@ func HandleAddTask(title string, subTasks []string) {
 }
 
 func HandleSetTaskById(id int, title string, subTasks []string, clearSubTasks bool) {
-	// create map from title, subTasks and clearSubTasks
 	taskMap := make(map[string]any, 2)
 	if len(title) > 0 {
 		taskMap["title"] = title

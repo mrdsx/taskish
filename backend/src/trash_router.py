@@ -15,6 +15,7 @@ router = APIRouter(prefix="/trash")
 async def get_tasks_from_trash(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
+    # TODO: extract "is true" and "expires_at" rules
     result = await session.execute(
         select(DB_Task)
         .where(DB_Task.deleted.is_(True), DB_Task.expires_at >= datetime.now())
@@ -22,6 +23,28 @@ async def get_tasks_from_trash(
     )
 
     return result.scalars().all()
+
+
+@router.get("/{task_id}", response_model=DeletedTaskOut)
+async def get_task_by_id(
+    task_id: int,
+    session: Annotated[AsyncSession, Depends(get_session)],
+):
+    result = await session.execute(
+        select(DB_Task).where(
+            DB_Task.id == task_id,
+            DB_Task.deleted.is_(True),
+            DB_Task.expires_at >= datetime.now(),
+        )
+    )
+    existing_task = result.scalar()
+    if existing_task is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Task not found",
+        )
+
+    return existing_task
 
 
 @router.post("/{task_id}")
@@ -40,7 +63,7 @@ async def restore_task_by_id(
     if existing_task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found.",
+            detail="Task not found",
         )
 
     existing_task.deleted = False

@@ -43,7 +43,7 @@ async def get_task_by_id(
     if existing_task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found.",
+            detail="Task not found",
         )
 
     return existing_task
@@ -78,7 +78,7 @@ async def update_task_by_id(
     if existing_task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found.",
+            detail="Task not found",
         )
 
     for key, value in task.model_dump().items():
@@ -105,7 +105,7 @@ async def delete_task_by_id(
     if existing_task is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found.",
+            detail="Task not found",
         )
 
     existing_task.deleted = True
