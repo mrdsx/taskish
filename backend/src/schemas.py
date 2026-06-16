@@ -24,12 +24,26 @@ class TaskIn(BaseModel):
 
     @field_validator("sub_tasks", mode="after")
     @classmethod
-    def strip_sub_tasks(cls, sub_tasks: list[str]) -> list[str]:
+    def strip_sub_tasks(cls, sub_tasks: Any) -> list[str]:
         mapped_tasks = map(lambda task: task.strip(), sub_tasks)
         valid_tasks = filter(lambda task: task != "", mapped_tasks)
         return list(valid_tasks)
 
     model_config = api_model_config
+
+
+class PartialTaskIn(TaskIn):
+    title: str | None = Field(min_length=1, default=None)
+    sub_tasks: list[str] | None = None
+
+    @field_validator("sub_tasks", mode="after")
+    @classmethod
+    def strip_sub_tasks(cls, sub_tasks: list[str] | None) -> list[str]:
+        if sub_tasks is None:
+            return []
+        mapped_tasks = map(lambda task: task.strip(), sub_tasks)
+        valid_tasks = filter(lambda task: task != "", mapped_tasks)
+        return list(valid_tasks)
 
 
 class TaskOut(BaseModel):

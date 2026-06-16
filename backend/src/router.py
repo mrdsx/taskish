@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas import TaskIn, TaskOut
+from src.schemas import PartialTaskIn, TaskIn, TaskOut
 from src.session import DB_Task, get_session
 
 router = APIRouter(prefix="/tasks")
@@ -61,10 +61,10 @@ async def create_task(
     return db_task
 
 
-@router.put("/{task_id}", response_model=TaskOut)
+@router.patch("/{task_id}", response_model=TaskOut)
 async def update_task_by_id(
     task_id: int,
-    task: TaskIn,
+    task: PartialTaskIn,
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
     result = await session.execute(
@@ -81,8 +81,9 @@ async def update_task_by_id(
             detail="Task not found.",
         )
 
-    existing_task.title = task.title
-    existing_task.sub_tasks = task.sub_tasks
+    for key, value in task.model_dump().items():
+        if value is not None:
+            setattr(existing_task, key, value)
     await session.commit()
 
     return existing_task
