@@ -11,6 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var titleFlag string
+var subTasksFlag []string
+var clearSubTasksFlag bool
+
+func init() {
+	setTaskByIdCmd.Flags().StringVarP(&titleFlag, "title", "t", "", "Set task title")
+	setTaskByIdCmd.Flags().StringSliceVar(&subTasksFlag, "sub-tasks", []string{}, "Set sub-tasks")
+	setTaskByIdCmd.Flags().BoolVar(&clearSubTasksFlag, "clear-sub-tasks", false, "Clear sub-tasks")
+}
+
 var TasksCmd = &cobra.Command{
 	Use:   "tasks [...taskId]",
 	Short: "Manage tasks",
@@ -49,32 +59,30 @@ var addTaskCmd = &cobra.Command{
 	},
 }
 
-var title string
-var subTasks []string
-var clearSubTasks bool
-
 var setTaskByIdCmd = &cobra.Command{
 	Use:   "set [taskId]",
 	Short: "Update task",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		title = strings.TrimSpace(title)
-		if len(title) > 0 {
-			fmt.Printf("Changing title to %q\n", title)
+		taskId, err := strconv.Atoi(args[0])
+		if err != nil {
+			panic(err)
 		}
 
-		fmt.Printf("%q\n", title)
-		fmt.Println(subTasks)
-		fmt.Println(clearSubTasks)
-		// subTasks = strings.TrimSpace(subTasks)
-		// if clearSubTasks {
-		// 	if len(subTasks) > 0 {
-		// 		log.Fatalln("Invalid flags: --sub-tasks and --clear-sub-tasks cannot be used together")
-		// 	}
-		// 	fmt.Println("Clearing sub-tasks")
-		// } else if len(subTasks) > 0 {
-		// 	fmt.Printf("Changing sub-tasks to %q\n", subTasks)
-		// }
+		title := strings.TrimSpace(titleFlag)
+		subTasks := []string{}
+		for _, task := range subTasksFlag {
+			task = strings.TrimSpace(task)
+			if len(task) > 0 {
+				subTasks = append(subTasks, task)
+			}
+		}
+
+		if len(subTasksFlag) > 0 && clearSubTasksFlag {
+			log.Fatalln("Invalid flags: --sub-tasks and --clear-sub-tasks cannot be used together")
+		}
+
+		handlers.HandleSetTaskById(taskId, title, subTasks, clearSubTasksFlag)
 	},
 }
 
@@ -99,10 +107,4 @@ var deleteTaskByIdCmd = &cobra.Command{
 
 func InitializeTasksCmd() {
 	TasksCmd.AddCommand(addTaskCmd, setTaskByIdCmd, deleteTaskByIdCmd)
-}
-
-func init() {
-	TasksCmd.Flags().StringVarP(&title, "title", "t", "", "Set task title")
-	TasksCmd.Flags().StringSliceVar(&subTasks, "sub-tasks", []string{}, "Set sub-tasks")
-	TasksCmd.Flags().BoolVar(&clearSubTasks, "clear-sub-tasks", false, "Clear sub-tasks")
 }

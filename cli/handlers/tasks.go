@@ -121,6 +121,46 @@ func HandleAddTask(title string, subTasks []string) {
 	fmt.Printf("Added task %q\n", taskIn.Title)
 }
 
+func HandleSetTaskById(id int, title string, subTasks []string, clearSubTasks bool) {
+	// create map from title, subTasks and clearSubTasks
+	taskMap := make(map[string]any, 2)
+	if len(title) > 0 {
+		taskMap["title"] = title
+	}
+	if len(subTasks) > 0 {
+		taskMap["subTasks"] = subTasks
+	} else if clearSubTasks {
+		taskMap["subTasks"] = []string{}
+	}
+
+	if len(taskMap) == 0 {
+		fmt.Println("No data to send")
+		return
+	}
+
+	jsonBytes, err := json.Marshal(taskMap)
+	if err != nil {
+		log.Fatalf("Error serializing map: %v", err)
+	}
+
+	res, err := lib.FetchApi(lib.FetchConfig{
+		Method:      "PATCH",
+		Path:        "/tasks/" + strconv.Itoa(id),
+		Body:        jsonBytes,
+		ContentType: "application/json",
+		Overrides: lib.Overrides{
+			NotFound: "Task not found",
+		},
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer res.Body.Close()
+
+	fmt.Printf("Update task with ID %d\n", id)
+}
+
 func HandleDeleteTasksById(ids []int) {
 	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/tasks"})
 	if err != nil {
@@ -178,5 +218,5 @@ func handleDeleteTaskById(id int, wg *sync.WaitGroup) {
 		return
 	}
 	defer res.Body.Close()
-	fmt.Printf("Deleted task with id %d\n", id)
+	fmt.Printf("Deleted task with ID %d\n", id)
 }

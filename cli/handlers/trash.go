@@ -105,5 +105,5 @@ func handleRestoreTaskById(id int, wg *sync.WaitGroup) {
 		return
 	}
 	defer res.Body.Close()
-	fmt.Printf("Restored task with id %d\n", id)
+	fmt.Printf("Restored task with ID %d\n", id)
 }
