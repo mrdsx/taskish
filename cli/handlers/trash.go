@@ -30,20 +30,22 @@ func HandleGetTrash() {
 	}
 	defer res.Body.Close()
 
-	var tasks []DeletedTask
-	json.NewDecoder(res.Body).Decode(&tasks)
-	for _, task := range tasks {
+	var deletedTasks []DeletedTask
+	var tasks []Task
+	json.NewDecoder(res.Body).Decode(&deletedTasks)
+	for _, task := range deletedTasks {
 		if err = task.Validate(); err != nil {
 			log.Fatalf("Response body validation failed:\n%v", err)
 		}
+
+		tasks = append(tasks, task.Task)
 	}
 
-	taskStrings := []string{}
-	for index, task := range tasks {
-		taskString := getTaskString(index, task.Task)
-		taskStrings = append(taskStrings, taskString)
+	if len(deletedTasks) == 0 {
+		fmt.Println("Empty trash")
 	}
-	fmt.Println(strings.Join(taskStrings, "\n\n"))
+
+	printTasks(tasks)
 }
 
 func HandleRestoreTasksById(ids []int) {

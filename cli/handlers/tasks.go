@@ -26,17 +26,20 @@ func (t Task) Validate() error {
 	return lib.Validate.Struct(t)
 }
 
-func getTaskString(index int, task Task) string {
-	taskString := fmt.Sprintf("%d. %s (%d)", index+1, task.Title, task.Id)
-	if index < 0 {
-		taskString = fmt.Sprintf("%s (%d)", task.Title, task.Id)
-	}
+func getTaskString(task Task) string {
+	taskString := fmt.Sprintf("%s (%d)", task.Title, task.Id)
 	subTasks := strings.Join(task.SubTasks, "\n  ")
 	if len(subTasks) > 0 {
 		taskString += fmt.Sprintf("\n  %s", subTasks)
 	}
 
 	return taskString
+}
+
+func printTasks(tasks []Task) {
+	for index, task := range tasks {
+		fmt.Printf("%d. %s (%d)\n", index+1, task.Title, task.Id)
+	}
 }
 
 func HandleGetAllTasks() {
@@ -60,12 +63,7 @@ func HandleGetAllTasks() {
 		return
 	}
 
-	taskStrings := []string{}
-	for index, task := range tasks {
-		taskString := getTaskString(index, task)
-		taskStrings = append(taskStrings, taskString)
-	}
-	fmt.Println(strings.Join(taskStrings, "\n\n"))
+	printTasks(tasks)
 }
 
 func HandleGetTaskById(id int) {
@@ -88,7 +86,7 @@ func HandleGetTaskById(id int) {
 		log.Fatalf("Response body validation failed:\n%v", err)
 	}
 
-	fmt.Println(getTaskString(-1, task))
+	fmt.Println(getTaskString(task))
 }
 
 func HandleAddTask(title string, subTasks []string) {

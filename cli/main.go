@@ -64,6 +64,11 @@ func main() {
 		},
 	}
 
+	// setTaskByIdCmd := &cobra.Command{
+	// 	Use:   "set [taskId]",
+	// 	Short: "Update task",
+	// }
+
 	deleteTaskByIdCmd := &cobra.Command{
 		Use:     "del [...taskId]",
 		Short:   "Delete one or multiple tasks by ID",
