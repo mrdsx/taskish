@@ -11,6 +11,11 @@ import (
 	"taskish/lib"
 )
 
+type TaskIn struct {
+	Title    string   `json:"title"`
+	SubTasks []string `json:"subTasks"`
+}
+
 type Task struct {
 	Id       int      `json:"id"       validate:"required"`
 	Title    string   `json:"title"    validate:"required"`
@@ -84,6 +89,28 @@ func HandleGetTaskById(id int) {
 	}
 
 	fmt.Println(getTaskString(-1, task))
+}
+
+func HandleAddTask(title string, subTasks []string) {
+	jsonBytes, err := json.Marshal(TaskIn{Title: title, SubTasks: subTasks})
+	if err != nil {
+		panic(err)
+	}
+
+	res, err := lib.FetchApi(lib.FetchConfig{
+		Method:      "POST",
+		Path:        "/tasks",
+		Body:        jsonBytes,
+		ContentType: "application/json",
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer res.Body.Close()
+
+	// Example output: Added task "batman"
+	fmt.Printf("Added task \"%s\"\n", title)
 }
 
 func HandleDeleteTasksById(ids []int) {

@@ -23,8 +23,9 @@ func GetConfigDir() string {
 	if err != nil {
 		log.Fatalln("Failed to detect home dir.")
 	}
+	fileName := fmt.Sprintf("%s.json", AppName)
 
-	return filepath.Join(home, ".config", "taskish.json")
+	return filepath.Join(home, ".config", fileName)
 }
 
 func GetConfig() Config {
@@ -32,7 +33,7 @@ func GetConfig() Config {
 	if _, err := os.Stat(configDir); errors.Is(err, os.ErrNotExist) {
 		answer := Prompt("Config is not set. Do you wish to initialize it? [y/N] ")
 		if answer == "y" {
-			fmt.Println("Run `taskish init` command to initialize config")
+			fmt.Printf("Run `%s init` command to initialize config\n", AppName)
 		}
 		os.Exit(0)
 	}

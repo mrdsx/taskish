@@ -21,6 +21,7 @@ func (t DeletedTask) Validate() error {
 	return lib.Validate.Struct(t)
 }
 
+// TODO: add human-readable label "expires in ..." to each task
 func HandleGetTrash() {
 	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {

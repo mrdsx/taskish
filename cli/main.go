@@ -1,22 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"taskish/handlers"
+	"taskish/lib"
 
 	"github.com/spf13/cobra"
 )
 
 func main() {
 	rootCmd := &cobra.Command{
-		Use:   "taskish",
-		Short: "A CLI client for Taskish API.",
+		Use:   lib.AppName,
+		Short: fmt.Sprintf("A CLI client for %s API.", lib.AppName),
 	}
 
 	initcmd := &cobra.Command{
 		Use:   "init",
-		Short: "Initialize config for using CLI client",
+		Short: "Initialize config",
+		Long:  "Initialize config for further CLI usage.",
 		Run: func(cmd *cobra.Command, args []string) {
 			handlers.HandleInit(handlers.InitConfig{})
 		},
@@ -37,6 +41,26 @@ func main() {
 
 				handlers.HandleGetTaskById(taskId)
 			}
+		},
+	}
+
+	addTaskCmd := &cobra.Command{
+		Use:   "add [title] [subTasks]",
+		Short: "Create task",
+		Args:  cobra.RangeArgs(1, 2),
+		Example: fmt.Sprintf(`  %s tasks add task
+  %s tasks add task "step 1,hands up, step 2, thumbs up"`, lib.AppName, lib.AppName),
+		Run: func(cmd *cobra.Command, args []string) {
+			title := args[0]
+			subTasks := []string{}
+			if len(args) == 2 {
+				subTasks = strings.Split(args[1], ",")
+				for index, task := range subTasks {
+					subTasks[index] = strings.TrimSpace(task)
+				}
+			}
+
+			handlers.HandleAddTask(title, subTasks)
 		},
 	}
 
@@ -61,7 +85,8 @@ func main() {
 
 	trashCmd := &cobra.Command{
 		Use:   "trash",
-		Short: "Get recently deleted tasks",
+		Short: "Manage deleted tasks",
+		Long:  "Manage deleted tasks. Right now it's possible to read and restore tasks.",
 		Run: func(cmd *cobra.Command, args []string) {
 			handlers.HandleGetTrash()
 		},
@@ -69,7 +94,7 @@ func main() {
 
 	restoreTaskCmd := &cobra.Command{
 		Use:   "restore [taskId]",
-		Short: "Restores recently deleted task",
+		Short: "Restore recently deleted task",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			ids := []int{}
@@ -86,7 +111,7 @@ func main() {
 	}
 
 	rootCmd.AddCommand(initcmd, tasksCmd, trashCmd)
-	tasksCmd.AddCommand(deleteTaskByIdCmd)
+	tasksCmd.AddCommand(addTaskCmd, deleteTaskByIdCmd)
 	trashCmd.AddCommand(restoreTaskCmd)
 
 	if err := rootCmd.Execute(); err != nil {
