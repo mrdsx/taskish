@@ -16,12 +16,7 @@ async def get_tasks(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
     result = await session.execute(
-        select(DB_Task)
-        .where(
-            DB_Task.deleted.is_(False),
-            DB_Task.expires_at.is_(None),
-        )
-        .order_by(DB_Task.id)
+        select(DB_Task).where(DB_Task.expires_at.is_(None)).order_by(DB_Task.id)
     )
 
     return result.scalars().all()
@@ -33,11 +28,7 @@ async def get_task_by_id(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
     result = await session.execute(
-        select(DB_Task).where(
-            DB_Task.id == task_id,
-            DB_Task.deleted.is_(False),
-            DB_Task.expires_at.is_(None),
-        )
+        select(DB_Task).where(DB_Task.id == task_id, DB_Task.expires_at.is_(None))
     )
     existing_task = result.scalar()
     if existing_task is None:
@@ -68,11 +59,7 @@ async def update_task_by_id(
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
     result = await session.execute(
-        select(DB_Task).where(
-            DB_Task.id == task_id,
-            DB_Task.deleted.is_(False),
-            DB_Task.expires_at.is_(None),
-        )
+        select(DB_Task).where(DB_Task.id == task_id, DB_Task.expires_at.is_(None))
     )
     existing_task = result.scalar()
     if existing_task is None:
@@ -95,11 +82,7 @@ async def delete_task_by_id(
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> Response:
     result = await session.execute(
-        select(DB_Task).where(
-            DB_Task.id == task_id,
-            DB_Task.deleted.is_(False),
-            DB_Task.expires_at.is_(None),
-        )
+        select(DB_Task).where(DB_Task.id == task_id, DB_Task.expires_at.is_(None))
     )
     existing_task = result.scalar()
     if existing_task is None:
@@ -108,7 +91,6 @@ async def delete_task_by_id(
             detail="Task not found",
         )
 
-    existing_task.deleted = True
     existing_task.expires_at = datetime.now() + timedelta(days=7)
     await session.commit()
 

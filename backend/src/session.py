@@ -28,4 +28,3 @@ class DB_Task(Base):
     title: Mapped[str]
     sub_tasks: Mapped[list[str]] = mapped_column(ARRAY(String))
     expires_at: Mapped[datetime | None] = mapped_column(default=None, nullable=True)
-    deleted: Mapped[bool] = mapped_column(default=False)

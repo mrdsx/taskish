@@ -17,9 +17,7 @@ async def get_tasks_from_trash(
 ):
     # TODO: extract "is true" and "expires_at" rules
     result = await session.execute(
-        select(DB_Task)
-        .where(DB_Task.deleted.is_(True), DB_Task.expires_at >= datetime.now())
-        .order_by(DB_Task.id)
+        select(DB_Task).where(DB_Task.expires_at >= datetime.now()).order_by(DB_Task.id)
     )
 
     return result.scalars().all()
@@ -33,7 +31,6 @@ async def get_task_by_id(
     result = await session.execute(
         select(DB_Task).where(
             DB_Task.id == task_id,
-            DB_Task.deleted.is_(True),
             DB_Task.expires_at >= datetime.now(),
         )
     )
@@ -55,7 +52,6 @@ async def restore_task_by_id(
     result = await session.execute(
         select(DB_Task).where(
             DB_Task.id == task_id,
-            DB_Task.deleted.is_(True),
             DB_Task.expires_at >= datetime.now(),
         )
     )
@@ -66,7 +62,6 @@ async def restore_task_by_id(
             detail="Task not found",
         )
 
-    existing_task.deleted = False
     existing_task.expires_at = None
     await session.commit()
 
