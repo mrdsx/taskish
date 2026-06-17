@@ -10,7 +10,7 @@ import (
 )
 
 type Config struct {
-	ApiUrl    string `json:"apiUrl"    validate:"required,origin"`
+	ApiUrl    string `json:"apiUrl"    validate:"required,url"`
 	AuthToken string `json:"authToken" validate:"required"`
 }
 
