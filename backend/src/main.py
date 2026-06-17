@@ -7,7 +7,7 @@ from src.core.middleware import AuthMiddleware
 app = FastAPI(lifespan=lifespan)
 
 
-# TODO: implement old deleted tasks cleanup
+# TODO: implement expired tasks cleanup
 @app.get("/")
 def read_root():
     return {"status": "ok"}

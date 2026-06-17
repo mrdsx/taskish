@@ -1,69 +1,40 @@
-from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
-from sqlalchemy import select
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db import get_session
-from src.db.tasks import DB_Task
-from src.schemas.trash import DeletedTaskOut
+from src.schemas.tasks import DeletedTaskOut
+from src.services.tasks import TaskService
 
 router = APIRouter(prefix="/trash")
 
 
 @router.get("/", response_model=list[DeletedTaskOut])
 async def get_tasks_from_trash(
+    task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    # TODO: extract "is true" and "expires_at" rules
-    result = await session.execute(
-        select(DB_Task).where(DB_Task.expires_at >= datetime.now()).order_by(DB_Task.id)
-    )
-
-    return result.scalars().all()
+    return await task_service.fetch_tasks(session=session, deleted=True)
 
 
 @router.get("/{task_id}", response_model=DeletedTaskOut)
 async def get_task_by_id(
     task_id: int,
+    task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    result = await session.execute(
-        select(DB_Task).where(
-            DB_Task.id == task_id,
-            DB_Task.expires_at >= datetime.now(),
-        )
+    return await task_service.fetch_task_by_id(
+        id=task_id, session=session, deleted=True
     )
-    existing_task = result.scalar()
-    if existing_task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found",
-        )
-
-    return existing_task
 
 
 @router.post("/{task_id}")
 async def restore_task_by_id(
     task_id: int,
+    task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    result = await session.execute(
-        select(DB_Task).where(
-            DB_Task.id == task_id,
-            DB_Task.expires_at >= datetime.now(),
-        )
-    )
-    existing_task = result.scalar()
-    if existing_task is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Task not found",
-        )
-
-    existing_task.expires_at = None
-    await session.commit()
+    await task_service.restore_task_by_id(id=task_id, session=session)
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
