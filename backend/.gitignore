@@ -10,6 +10,7 @@ dist/
 .env
 
 # Databases
+cron_state.*
 *.sqlite
 *.db
 

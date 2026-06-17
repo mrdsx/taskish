@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 from fastapi import HTTPException, status
-from sqlalchemy import ColumnElement, Sequence, select
+from sqlalchemy import ColumnElement, Sequence, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.tasks import DB_Task
@@ -64,9 +64,15 @@ class TaskService:
         db_task.expires_at = None
         await session.commit()
 
+    async def delete_expired_tasks(self, session: AsyncSession) -> None:
+        await session.execute(
+            delete(DB_Task).where(DB_Task.expires_at <= datetime.now())
+        )
+        await session.commit()
+
     def _get_expiration_clause(self, deleted: bool) -> ColumnElement[bool]:
         where_clause = DB_Task.expires_at.is_(None)
         if deleted:
-            where_clause = DB_Task.expires_at >= datetime.now()
+            where_clause = DB_Task.expires_at > datetime.now()
 
         return where_clause
