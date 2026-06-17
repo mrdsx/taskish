@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 
-from src.session import Base, engine
+from src.db import Base, engine
 
 
 @asynccontextmanager

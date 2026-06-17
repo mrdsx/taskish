@@ -5,8 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.schemas import PartialTaskIn, TaskIn, TaskOut
-from src.session import DB_Task, get_session
+from src.db import get_session
+from src.db.tasks import DB_Task
+from src.schemas.tasks import PartialTaskIn, TaskIn, TaskOut
 
 router = APIRouter(prefix="/tasks")
 

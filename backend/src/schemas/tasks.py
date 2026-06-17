@@ -1,14 +1,9 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-from pydantic.alias_generators import to_camel
+from pydantic import BaseModel, Field, field_validator
 
-api_model_config = ConfigDict(
-    alias_generator=to_camel,
-    validate_by_alias=True,
-    validate_by_name=True,
-)
+from src.schemas.config import api_model_config
 
 
 class TaskIn(BaseModel):

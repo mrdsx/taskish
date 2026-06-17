@@ -2,7 +2,7 @@ from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
-from src.settings import settings
+from src.core.settings import settings
 
 # TODO
 # ? Rate limiting (for preventing brute-force)
