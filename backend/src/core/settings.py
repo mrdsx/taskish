@@ -22,6 +22,12 @@ class Settings(BaseSettings):
             database=self.db_name,
         )
 
+    # rate limiting configuration
+    max_successful_attempts: int
+    success_time_window_seconds: int
+    max_failed_attempts: int
+    failure_time_window_seconds: int
+
     model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 
 
