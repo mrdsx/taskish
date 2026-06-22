@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from src.core.settings import settings
+from src.utils.time import get_now
 
 
 class RateLimiter:
@@ -20,11 +21,11 @@ class RateLimiter:
 
     def record_attempt(self, ip: str) -> None:
         self.ip_map[ip] = self._get_attempts_within_window(ip)
-        attempt = datetime.now()
+        attempt = get_now()
         self.ip_map[ip].append(attempt)
 
     def _get_attempts_within_window(self, ip: str) -> list[datetime]:
-        now = datetime.now()
+        now = get_now()
         cutoff_datetime = now - timedelta(seconds=self.time_window_seconds)
         attempts = self.ip_map.get(ip, [])
 

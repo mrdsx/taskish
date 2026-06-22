@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import String
+from sqlalchemy import DateTime, String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -13,4 +13,6 @@ class DB_Task(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str]
     sub_tasks: Mapped[list[str]] = mapped_column(ARRAY(String))
-    expires_at: Mapped[datetime | None] = mapped_column(default=None, nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), default=None, nullable=True
+    )

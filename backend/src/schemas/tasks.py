@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_serializer, field_validator
 
 from src.schemas.config import api_model_config
+from src.utils.time import humanize_expiration
 
 
 class TaskIn(BaseModel):
@@ -51,5 +52,9 @@ class TaskOut(BaseModel):
 
 class DeletedTaskOut(TaskOut):
     expires_at: datetime
+
+    @field_serializer("expires_at", when_used="json")
+    def serialize_expiration_field(self, expires_at: datetime) -> str:
+        return humanize_expiration(expires_at)
 
     model_config = api_model_config
