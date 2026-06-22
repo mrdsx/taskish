@@ -30,22 +30,6 @@ func (t TaskIn) Validate() error {
 	return lib.Validate.Struct(t)
 }
 
-func GetTaskString(task Task) string {
-	taskString := fmt.Sprintf("%s (%d)", task.Title, task.Id)
-	subTasks := strings.Join(task.SubTasks, "\n  ")
-	if len(subTasks) > 0 {
-		taskString += fmt.Sprintf("\n  %s", subTasks)
-	}
-
-	return taskString
-}
-
-func printTasks(tasks []Task) {
-	for index, task := range tasks {
-		fmt.Printf("%d. %s (%d)\n", index+1, task.Title, task.Id)
-	}
-}
-
 func HandleGetAllTasks() {
 	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/tasks"})
 	if err != nil {
@@ -67,7 +51,9 @@ func HandleGetAllTasks() {
 		return
 	}
 
-	printTasks(tasks)
+	for index, task := range tasks {
+		fmt.Printf("%d. %s (%d)\n", index+1, task.Title, task.Id)
+	}
 }
 
 func HandleGetTaskById(id int) {
@@ -90,7 +76,13 @@ func HandleGetTaskById(id int) {
 		log.Fatalf("Response body validation failed:\n%v", err)
 	}
 
-	fmt.Println(GetTaskString(task))
+	taskString := fmt.Sprintf("%s (%d)", task.Title, task.Id)
+	subTasks := strings.Join(task.SubTasks, "\n  ")
+	if len(subTasks) > 0 {
+		taskString += fmt.Sprintf("\n  %s", subTasks)
+	}
+
+	fmt.Println(taskString)
 }
 
 func HandleAddTask(title string, subTasks []string) {

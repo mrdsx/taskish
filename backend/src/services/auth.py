@@ -9,7 +9,6 @@ from src.core.rate_limiting import (
 
 class AuthService:
     def handle_successful_auth(ip: str) -> JSONResponse | None:
-        # TODO: test. Might be broken. Move recort_attempt below if check then.
         successful_attempts_rate_limiter.record_attempt(ip)
         if successful_attempts_rate_limiter.is_limited(ip):
             return JSONResponse(

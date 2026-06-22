@@ -13,15 +13,14 @@ import (
 
 type DeletedTask struct {
 	Task
-	// iso 8601 date
-	ExpiresAt string `json:"expiresAt" validate:"required,datetime=2006-01-02T15:04:05"`
+	// human-readable string like "expired", "expires in 6 seconds", "expires in 7 miutes", etc.
+	ExpiresAt string `json:"expiresAt" validate:"required"`
 }
 
 func (t DeletedTask) Validate() error {
 	return lib.Validate.Struct(t)
 }
 
-// TODO: add human-readable label "expires in ..." to each task
 func HandleGetTrash() {
 	res, err := lib.FetchApi(lib.FetchConfig{Method: "GET", Path: "/trash"})
 	if err != nil {
@@ -31,21 +30,26 @@ func HandleGetTrash() {
 	defer res.Body.Close()
 
 	var deletedTasks []DeletedTask
-	var tasks []Task
 	json.NewDecoder(res.Body).Decode(&deletedTasks)
 	for _, task := range deletedTasks {
 		if err = task.Validate(); err != nil {
 			log.Fatalf("Response body validation failed:\n%v", err)
 		}
-
-		tasks = append(tasks, task.Task)
 	}
 
 	if len(deletedTasks) == 0 {
 		fmt.Println("Trash is empty")
 	}
 
-	printTasks(tasks)
+	for index, task := range deletedTasks {
+		fmt.Printf(
+			"%d. %s (%d) - %s\n",
+			index+1,
+			task.Title,
+			task.Id,
+			task.ExpiresAt,
+		)
+	}
 }
 
 func HandleGetDeletedTaskById(id int) {
@@ -68,7 +72,13 @@ func HandleGetDeletedTaskById(id int) {
 		log.Fatalf("Response body validation failed:\n%v", err)
 	}
 
-	fmt.Println(GetTaskString(task.Task))
+	taskString := fmt.Sprintf("%s (%d) - %s", task.Title, task.Id, task.ExpiresAt)
+	subTasks := strings.Join(task.SubTasks, "\n  ")
+	if len(subTasks) > 0 {
+		taskString += fmt.Sprintf("\n  %s", subTasks)
+	}
+
+	fmt.Println(taskString)
 }
 
 func HandleRestoreTasksById(ids []int) {
