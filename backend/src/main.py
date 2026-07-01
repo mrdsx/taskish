@@ -20,6 +20,7 @@ def read_root():
     return {"status": "ok"}
 
 
+# every day at midnight
 @crons.cron("0 0 * * *")
 async def delete_expired_tasks():
     async for session in get_session():
