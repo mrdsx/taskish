@@ -4,6 +4,11 @@ from sqlalchemy.engine import URL
 
 class Settings(BaseSettings):
     auth_token: str
+    frontend_url: str = "http://localhost:3000"
+
+    @property
+    def allowed_origins(self) -> list[str]:
+        return [self.frontend_url]
 
     db_user: str = "postgres"
     db_pass: str = "postgres"
@@ -31,4 +36,4 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 
 
-settings = Settings()  # ty: ignore[missing-argument]
+settings = Settings()
