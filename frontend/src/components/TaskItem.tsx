@@ -1,22 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/solid-query";
-import { Trash2Icon } from "lucide-solid";
+import { PlusIcon, Trash2Icon } from "lucide-solid";
 import { Show } from "solid-js";
 import type { Task } from "@/lib/types";
-import { useUserStore } from "@/stores/user";
+import { taskService } from "@/repositories/tasks";
 import { Button } from "./ui/button";
 import { LoadingSwap } from "./ui/loading-swap";
 
 export function TaskItem(props: { task: Task }) {
-  const user = useUserStore();
   const queryClient = useQueryClient();
   const deleteTaskMutation = useMutation(() => ({
     mutationKey: ["deleteTask", props.task.id],
     mutationFn: async () => {
-      // TODO: extract to repository
-      await fetch(`${user().apiUrl}/api/tasks/${props.task.id}`, {
-        method: "DELETE",
-        headers: { "auth-token": user().authToken },
-      });
+      const result = await taskService.deleteById(props.task.id);
+      if (!result.success) {
+        throw new Error("Failed to delete task");
+      }
     },
     onSuccess: () => {
       const tasks = queryClient.getQueryData(["tasks"]) as Task[];
@@ -31,19 +29,23 @@ export function TaskItem(props: { task: Task }) {
 
   return (
     <div class="flex justify-between relative gap-2 overflow-hidden rounded-lg border bg-neutral-50 dark:bg-neutral-900 p-2">
-      <div class="w-auto max-w-100">
-        <Show when={deleteTaskMutation.isPending}>
-          <div class="bg-muted absolute inset-0 opacity-50" />
-        </Show>
+      <Show when={deleteTaskMutation.isPending}>
+        <div class="bg-muted absolute inset-0 opacity-50" />
+      </Show>
+      <div class="w-auto space-y-2 max-w-100">
         <p class="wrap-anywhere line-clamp-2 font-semibold text-[17px]">
           {props.task.title}
         </p>
         <div class="flex flex-wrap gap-1">
           {props.task.subTasks.map((subTask) => (
-            <p class="wrap-anywhere w-fit rounded-md bg-blue-200 dark:bg-blue-900 px-2">
+            <p class="wrap-anywhere flex items-center w-fit rounded-md bg-blue-200 dark:bg-blue-900 px-2">
               {subTask}
             </p>
           ))}
+          {/* TODO: implement sub task creation via PATCH endpoint */}
+          <Button size="icon-sm" variant="outline">
+            <PlusIcon />
+          </Button>
         </div>
       </div>
       <Button

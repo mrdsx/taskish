@@ -7,6 +7,7 @@ import { LoaderCircleIcon, PlusIcon, XIcon } from "lucide-solid";
 import { createSignal, For, Index, Match, Show, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 import type { Task, TaskIn } from "@/lib/types";
+import { taskService } from "@/repositories/tasks";
 import { useUserStore } from "@/stores/user";
 import { TaskItem } from "./TaskItem";
 import { ToggleThemeButton } from "./ToggleThemeButton";
@@ -45,15 +46,12 @@ export function TasksScreen() {
   const tasksQuery = useQuery(() => ({
     queryKey: ["tasks"],
     queryFn: async (): Promise<Task[]> => {
-      // TODO: extract to repository
-      const response = await fetch(`${user().apiUrl}/api/tasks`, {
-        headers: { "auth-token": user().authToken },
-      });
-      if (!response.ok) {
+      const result = await taskService.getAll();
+      if (!result.success) {
         throw new Error("Failed to fetch tasks");
       }
 
-      return await response.json();
+      return result.data;
     },
     retry: false,
   }));
@@ -61,17 +59,12 @@ export function TasksScreen() {
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
   const addTaskMutation = createMutation(() => ({
     mutationFn: async (taskIn: TaskIn): Promise<Task> => {
-      // TODO: extract to repository
-      const response = await fetch(`${user().apiUrl}/api/tasks`, {
-        method: "POST",
-        headers: {
-          "auth-token": user().authToken,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(taskIn),
-      });
+      const result = await taskService.create(taskIn);
+      if (!result.success) {
+        throw new Error("Failed to create task");
+      }
 
-      return response.json();
+      return result.data;
     },
     onSuccess: (newTask) => {
       const tasks = queryClient.getQueryData(["tasks"]) as Task[];

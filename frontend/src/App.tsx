@@ -1,6 +1,7 @@
 import { createEffect, Match, onMount, Switch } from "solid-js";
 import { AuthForm } from "./components/AuthForm";
 import { TasksScreen } from "./components/TasksScreen";
+import { taskService } from "./repositories/tasks";
 import { useThemeStore } from "./stores/theme";
 import { useUserStore } from "./stores/user";
 
@@ -17,11 +18,8 @@ export function App() {
   });
 
   onMount(async () => {
-    // TODO: extract to repository
-    const response = await fetch(user().apiUrl, {
-      headers: { "auth-token": user().authToken },
-    });
-    if (!response.ok) {
+    const result = await taskService.getAll();
+    if (!result.success) {
       user().reset();
     }
   });
