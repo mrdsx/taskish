@@ -10,7 +10,7 @@ import { taskInSchema, taskSchema } from "./schemas";
 
 class TaskService {
   public async getAll(): Promise<Result<Task[]>> {
-    const response = await fetchApi("/api/tasks");
+    const response = await fetchApi("/tasks");
     if (!response.ok) {
       return buildErrorResult("internal_error");
     }
@@ -30,7 +30,7 @@ class TaskService {
       return buildErrorResult("client_validation_error");
     }
 
-    const response = await fetchApi("/api/tasks", {
+    const response = await fetchApi("/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ class TaskService {
       return buildErrorResult("client_validation_error");
     }
 
-    const response = await fetchApi(`/api/tasks/${taskId}`, {
+    const response = await fetchApi(`/tasks/${taskId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -80,7 +80,7 @@ class TaskService {
   }
 
   public async deleteById(taskId: Task["id"]): Promise<Result<null>> {
-    const response = await fetchApi(`/api/tasks/${taskId}`, {
+    const response = await fetchApi(`/tasks/${taskId}`, {
       method: "DELETE",
     });
     if (!response.ok) {

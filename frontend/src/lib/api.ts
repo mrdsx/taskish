@@ -4,7 +4,7 @@ export async function fetchApi(path: `/${string}`, init?: RequestInit) {
   const apiUrl = useUserStore.getState().apiUrl;
   const authToken = useUserStore.getState().authToken;
 
-  return await fetch(apiUrl + path, {
+  return await fetch(`${apiUrl}/api${path}`, {
     ...init,
     headers: {
       "auth-token": authToken,
