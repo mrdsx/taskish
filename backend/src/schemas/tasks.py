@@ -1,14 +1,21 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field, field_serializer, field_validator
+from pydantic import (
+    BaseModel,
+    Field,
+    field_serializer,
+    field_validator,
+)
 
 from src.schemas.config import api_model_config
 from src.utils.time import humanize_expiration
 
+MAX_TITLE_LENGTH = 50
+
 
 class TaskIn(BaseModel):
-    title: str = Field(min_length=1)
+    title: str = Field(min_length=1, max_length=MAX_TITLE_LENGTH)
     sub_tasks: list[str]
 
     @field_validator("title", mode="before")
@@ -20,26 +27,31 @@ class TaskIn(BaseModel):
 
     @field_validator("sub_tasks", mode="after")
     @classmethod
-    def strip_sub_tasks(cls, sub_tasks: Any) -> list[str]:
-        mapped_tasks = map(lambda task: task.strip(), sub_tasks)
-        valid_tasks = filter(lambda task: task != "", mapped_tasks)
-        return list(valid_tasks)
+    def strip_sub_tasks(cls, sub_tasks: list[str]) -> list[str]:
+        valid_tasks: list[str] = []
+
+        for sub_task in sub_tasks:
+            stripped = sub_task.strip()
+            if len(stripped) > MAX_TITLE_LENGTH:
+                raise ValueError("Too long sub task")
+            elif len(stripped) > 0:
+                valid_tasks.append(stripped)
+
+        return valid_tasks
 
     model_config = api_model_config
 
 
 class PartialTaskIn(TaskIn):
-    title: str | None = Field(min_length=1, default=None)
+    title: str | None = Field(min_length=1, max_length=MAX_TITLE_LENGTH, default=None)
     sub_tasks: list[str] | None = None
 
-    @field_validator("sub_tasks", mode="after")
+    @field_validator("sub_tasks", mode="before")
     @classmethod
-    def strip_sub_tasks(cls, sub_tasks: list[str] | None) -> list[str]:
+    def process_tasks(cls, sub_tasks: Any) -> Any:
         if sub_tasks is None:
             return []
-        mapped_tasks = map(lambda task: task.strip(), sub_tasks)
-        valid_tasks = filter(lambda task: task != "", mapped_tasks)
-        return list(valid_tasks)
+        return sub_tasks
 
 
 class TaskOut(BaseModel):

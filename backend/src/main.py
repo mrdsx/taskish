@@ -13,7 +13,6 @@ from src.services.tasks import TaskService
 
 # TODO
 # ? Logging (for auditing auth attempts)
-# ? Enforce length limits (50 chars for title and subTask title)
 
 app = FastAPI(lifespan=lifespan)
 crons = Crons(app)
