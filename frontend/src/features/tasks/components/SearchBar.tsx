@@ -18,7 +18,7 @@ export function SearchBar() {
         }}
       />
       <Show when={searchQuery()?.length > 0}>
-        <InputGroupButton>
+        <InputGroupButton onClick={() => setSearchQuery("")}>
           <XIcon />
         </InputGroupButton>
       </Show>
