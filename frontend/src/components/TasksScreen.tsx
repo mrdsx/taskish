@@ -9,6 +9,7 @@ import { createStore } from "solid-js/store";
 import type { Task, TaskIn } from "@/lib/types";
 import { useUserStore } from "@/stores/user";
 import { TaskItem } from "./TaskItem";
+import { ToggleThemeButton } from "./ToggleThemeButton";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -127,9 +128,12 @@ export function TasksScreen() {
     <>
       <header class="flex justify-between px-6 py-4">
         <h1 class="font-semibold text-xl">Taskish</h1>
-        <Button variant="outline" onClick={handleLogOut}>
-          Log Out
-        </Button>
+        <div class="flex items-center gap-2">
+          <ToggleThemeButton />
+          <Button variant="outline" onClick={handleLogOut}>
+            Log Out
+          </Button>
+        </div>
       </header>
       <main class="flex justify-center">
         <div class="mx-4 mt-20 w-full max-w-120 space-y-2">
@@ -174,9 +178,11 @@ export function TasksScreen() {
                 open={isOpen()}
                 onOpenChange={(isOpen) => setIsOpen(isOpen)}
               >
-                <DialogTrigger>
-                  <Button>Create task</Button>
-                </DialogTrigger>
+                <DialogTrigger
+                  as={() => (
+                    <Button onClick={() => setIsOpen(true)}>Create task</Button>
+                  )}
+                />
                 <DialogContent showCloseButton>
                   <DialogHeader>
                     <DialogTitle>New task</DialogTitle>

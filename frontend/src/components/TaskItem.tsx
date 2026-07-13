@@ -30,7 +30,7 @@ export function TaskItem(props: { task: Task }) {
   }
 
   return (
-    <div class="flex justify-between relative gap-2 overflow-hidden rounded-lg border bg-gray-50 p-2">
+    <div class="flex justify-between relative gap-2 overflow-hidden rounded-lg border bg-neutral-50 dark:bg-neutral-900 p-2">
       <div class="w-auto max-w-100">
         <Show when={deleteTaskMutation.isPending}>
           <div class="bg-muted absolute inset-0 opacity-50" />
@@ -38,13 +38,13 @@ export function TaskItem(props: { task: Task }) {
         <p class="wrap-anywhere line-clamp-2 font-semibold text-[17px]">
           {props.task.title}
         </p>
-        <ul class="space-y-1">
+        <div class="flex flex-wrap gap-1">
           {props.task.subTasks.map((subTask) => (
-            <p class="wrap-anywhere w-fit rounded-md bg-blue-200 px-2">
+            <p class="wrap-anywhere w-fit rounded-md bg-blue-200 dark:bg-blue-900 px-2">
               {subTask}
             </p>
           ))}
-        </ul>
+        </div>
       </div>
       <Button
         size="icon"
