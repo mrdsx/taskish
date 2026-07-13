@@ -3,6 +3,7 @@ import { createSignal, type Setter } from "solid-js";
 import { createStore } from "solid-js/store";
 import { FormErrorView } from "@/components/form-error-view";
 import { SubmitButton } from "@/components/submit-button";
+import { MAX_TITLE_LENGTH } from "../../schemas";
 import { taskService } from "../../services";
 import type { Task, TaskIn } from "../../types";
 import { DIALOG_PADDING } from "./add-task-dialog";
@@ -45,6 +46,14 @@ export function AddTaskForm(props: { setIsDialogOpen: Setter<boolean> }) {
       .filter((subTask) => subTask.length > 0);
     if (title.length === 0) {
       setFormError("Empty title");
+      return;
+    }
+    if (title.length > MAX_TITLE_LENGTH) {
+      setFormError("Too long title");
+      return;
+    }
+    if (subTasks.some((t) => t.length > MAX_TITLE_LENGTH)) {
+      setFormError("Too long sub task");
       return;
     }
 

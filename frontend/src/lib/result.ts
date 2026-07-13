@@ -1,4 +1,5 @@
-type ErrorCode = "internal_error";
+type ErrorCode =
+  "client_validation_error" | "response_validation_error" | "internal_error";
 
 type SuccessfulResult<T> = {
   data: T;
