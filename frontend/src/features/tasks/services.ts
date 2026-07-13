@@ -46,7 +46,36 @@ class TaskService {
     const data = await response.json();
     const responseParse = taskSchema.safeParse(data);
     if (!responseParse.success) {
+      return buildErrorResult("response_validation_error");
+    }
+
+    return buildSuccessfulResult(responseParse.data);
+  }
+
+  public async updateById(
+    taskId: Task["id"],
+    taskIn: TaskIn,
+  ): Promise<Result<Task>> {
+    const inputParse = taskInSchema.safeParse(taskIn);
+    if (!inputParse.success) {
       return buildErrorResult("client_validation_error");
+    }
+
+    const response = await fetchApi(`/api/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inputParse.data),
+    });
+    if (!response.ok) {
+      return buildErrorResult("internal_error");
+    }
+
+    const data = await response.json();
+    const responseParse = taskSchema.safeParse(data);
+    if (!responseParse.success) {
+      return buildErrorResult("response_validation_error");
     }
 
     return buildSuccessfulResult(responseParse.data);

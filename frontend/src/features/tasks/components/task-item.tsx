@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/solid-query";
-import { PlusIcon, Trash2Icon } from "lucide-solid";
+import { Trash2Icon } from "lucide-solid";
 import { Show } from "solid-js";
 import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/ui/loading-swap";
 import { taskService } from "@/features/tasks";
 import type { Task } from "../types";
+import { UpdateTaskDialog } from "./update-task-dialog";
 
 export function TaskItem(props: { task: Task }) {
   const queryClient = useQueryClient();
@@ -23,7 +23,7 @@ export function TaskItem(props: { task: Task }) {
     },
   }));
 
-  function handleClick() {
+  function handleDeleteTask() {
     deleteTaskMutation.mutate();
   }
 
@@ -32,7 +32,7 @@ export function TaskItem(props: { task: Task }) {
       <Show when={deleteTaskMutation.isPending}>
         <div class="absolute inset-0 bg-muted opacity-50" />
       </Show>
-      <div class="w-auto max-w-100 space-y-2">
+      <div class="w-auto space-y-2">
         <p class="wrap-anywhere line-clamp-2 font-semibold text-[17px]">
           {props.task.title}
         </p>
@@ -42,22 +42,14 @@ export function TaskItem(props: { task: Task }) {
               {subTask}
             </p>
           ))}
-          {/* TODO: implement sub task creation via PATCH endpoint */}
-          <Button size="icon-sm" variant="outline">
-            <PlusIcon />
-          </Button>
         </div>
       </div>
-      <Button
-        size="icon"
-        variant="destructive"
-        disabled={deleteTaskMutation.isPending}
-        onClick={handleClick}
-      >
-        <LoadingSwap isLoading={deleteTaskMutation.isPending}>
+      <div class="flex gap-2">
+        <UpdateTaskDialog task={props.task} />
+        <Button size="icon" variant="destructive" onClick={handleDeleteTask}>
           <Trash2Icon />
-        </LoadingSwap>
-      </Button>
+        </Button>
+      </div>
     </div>
   );
 }

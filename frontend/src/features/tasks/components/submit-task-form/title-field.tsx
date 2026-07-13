@@ -4,8 +4,8 @@ import {
   TextFieldInput,
   TextFieldLabel,
 } from "@/components/ui/text-field";
+import { DIALOG_PADDING } from "../../constants";
 import type { TaskIn } from "../../types";
-import { DIALOG_PADDING } from "./add-task-dialog";
 
 type TitleFieldProps = {
   title: string;

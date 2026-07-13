@@ -2,7 +2,7 @@ import { type ComponentProps, splitProps } from "solid-js";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 
-type SubmitButtonProps = Omit<ComponentProps<"button">, "disabled"> & {
+type SubmitButtonProps = ComponentProps<"button"> & {
   isLoading?: boolean;
 };
 
@@ -13,7 +13,7 @@ export function SubmitButton(props: SubmitButtonProps) {
     <Button
       class={props.class}
       type="submit"
-      disabled={props.isLoading}
+      disabled={props.disabled || props.isLoading}
       {...rest}
     >
       <LoadingSwap isLoading={props.isLoading ?? false}>
