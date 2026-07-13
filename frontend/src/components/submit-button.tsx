@@ -7,7 +7,7 @@ type SubmitButtonProps = ComponentProps<"button"> & {
 };
 
 export function SubmitButton(props: SubmitButtonProps) {
-  const [, rest] = splitProps(props, ["class", "isLoading"]);
+  const [, rest] = splitProps(props, ["class", "isLoading", "disabled"]);
 
   return (
     <Button
