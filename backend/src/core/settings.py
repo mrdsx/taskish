@@ -15,6 +15,7 @@ class Settings(BaseSettings):
         return [self.frontend_url]
 
     db_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/database"
+    db_ssl_mode: Literal["require"] | None = None
 
     # rate limiting configuration
     max_successful_attempts: int

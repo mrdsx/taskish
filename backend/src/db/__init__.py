@@ -5,7 +5,10 @@ from sqlalchemy.orm import DeclarativeBase
 
 from src.core.settings import settings
 
-engine = create_async_engine(settings.db_url)
+engine = create_async_engine(
+    settings.db_url,
+    connect_args={"ssl": settings.db_ssl_mode == "require"},
+)
 AsyncSessionLocal = async_sessionmaker(engine, expire_on_commit=False)
 
 
