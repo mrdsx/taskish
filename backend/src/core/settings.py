@@ -1,7 +1,6 @@
 from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from sqlalchemy.engine import URL
 
 
 class Settings(BaseSettings):
@@ -15,22 +14,7 @@ class Settings(BaseSettings):
     def allowed_origins(self) -> list[str]:
         return [self.frontend_url]
 
-    db_user: str = "postgres"
-    db_pass: str = "postgres"
-    db_host: str = "localhost"
-    db_port: int = 5432
-    db_name: str = "database"
-
-    @property
-    def db_url(self) -> URL:
-        return URL.create(
-            drivername="postgresql+asyncpg",
-            username=self.db_user,
-            password=self.db_pass,
-            host=self.db_host,
-            port=self.db_port,
-            database=self.db_name,
-        )
+    db_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/database"
 
     # rate limiting configuration
     max_successful_attempts: int
