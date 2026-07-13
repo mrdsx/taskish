@@ -26,7 +26,7 @@ func FetchApi(fetchConfig FetchConfig) (*http.Response, error) {
 
 	req, _ := http.NewRequest(
 		fetchConfig.Method,
-		config.ApiUrl+fetchConfig.Path,
+		config.ApiUrl+"/api"+fetchConfig.Path,
 		bytes.NewBuffer(fetchConfig.Body),
 	)
 	req.Header.Set(AuthTokenHeader, config.AuthToken)
