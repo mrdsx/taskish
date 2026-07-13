@@ -50,7 +50,7 @@ export function SubTasksField(props: SubTasksFieldProps) {
     <TextField>
       <TextFieldLabel class={`px-${DIALOG_PADDING}`}>Sub tasks</TextFieldLabel>
       <ul
-        class={`space-y-2 py-0.75 px-${DIALOG_PADDING} max-h-60 overflow-auto`}
+        class={`space-y-2 pt-0.75 px-${DIALOG_PADDING} max-h-60 overflow-auto`}
       >
         <Index each={props.subTasks}>
           {(subTask, index) => (
