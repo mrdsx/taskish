@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/solid-query";
 import { Trash2Icon } from "lucide-solid";
 import { Show } from "solid-js";
 import { Button } from "@/components/ui/button";
+import { LoadingSwap } from "@/components/ui/loading-swap";
 import { taskService } from "@/features/tasks";
 import type { Task } from "../types";
 import { UpdateTaskDialog } from "./update-task-dialog";
@@ -47,7 +48,9 @@ export function TaskItem(props: { task: Task }) {
       <div class="flex gap-2">
         <UpdateTaskDialog task={props.task} />
         <Button size="icon" variant="destructive" onClick={handleDeleteTask}>
-          <Trash2Icon />
+          <LoadingSwap isLoading={deleteTaskMutation.isPending}>
+            <Trash2Icon />
+          </LoadingSwap>
         </Button>
       </div>
     </div>
