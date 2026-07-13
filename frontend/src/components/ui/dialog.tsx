@@ -3,7 +3,7 @@ import type { ComponentProps, ValidComponent } from "solid-js";
 import { mergeProps, Show, splitProps } from "solid-js";
 import { cx } from "@/lib/utils";
 
-export const DialogPortal = DialogPrimitive.Portal;
+const DialogPortal = DialogPrimitive.Portal;
 
 export type DialogProps = ComponentProps<typeof DialogPrimitive>;
 
