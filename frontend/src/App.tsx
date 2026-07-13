@@ -1,6 +1,6 @@
 import { createEffect, Match, onMount, Switch } from "solid-js";
-import { AuthForm } from "@/components/AuthForm";
-import { Header } from "@/components/Header";
+import { AuthForm } from "@/components/auth-form";
+import { Header } from "@/components/header";
 import { TasksScreen, taskService } from "@/features/tasks";
 import { useThemeStore } from "@/stores/theme";
 import { useUserStore } from "@/stores/user";

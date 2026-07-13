@@ -2,7 +2,7 @@ import { RefreshCwIcon } from "lucide-solid";
 import { cx } from "@/lib/utils";
 import { Button } from "./ui/button";
 
-export function RefreshButtonView(props: {
+export function RefreshButton(props: {
   isRefreshing: boolean;
   refresh: () => void;
 }) {

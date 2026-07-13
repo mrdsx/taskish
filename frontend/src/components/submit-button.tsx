@@ -2,7 +2,7 @@ import { type ComponentProps, splitProps } from "solid-js";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 
-type SubmitButtonProps = ComponentProps<"button"> & {
+type SubmitButtonProps = Omit<ComponentProps<"button">, "disabled"> & {
   isLoading?: boolean;
 };
 

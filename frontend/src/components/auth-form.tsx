@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/solid-query";
-import { createSignal, Show } from "solid-js";
+import { createSignal } from "solid-js";
 import { taskService } from "@/features/tasks";
 import { useUserStore } from "@/stores/user";
-import { Button } from "./ui/button";
+import { FormErrorView } from "./form-error-view";
+import { SubmitButton } from "./submit-button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { LoadingSwap } from "./ui/loading-swap";
 import { TextField, TextFieldInput, TextFieldLabel } from "./ui/text-field";
 
 export function AuthForm() {
@@ -71,17 +71,11 @@ export function AuthForm() {
               }}
             />
           </TextField>
-          <Button
-            class="w-full"
-            type="submit"
-            disabled={authMutation.isPending}
-          >
-            <LoadingSwap isLoading={authMutation.isPending}>Log In</LoadingSwap>
-          </Button>
+          <SubmitButton class="w-full" isLoading={authMutation.isPending}>
+            Log In
+          </SubmitButton>
         </form>
-        <Show when={formError() !== null}>
-          <p class="mt-2 text-red-500">{formError()}</p>
-        </Show>
+        <FormErrorView class="mt-4" formError={formError()} />
       </CardContent>
     </Card>
   );

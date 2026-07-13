@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AddTaskForm } from "./AddTaskForm";
+import { AddTaskForm } from "./add-task-form";
 
 export const DIALOG_PADDING = 6;
 

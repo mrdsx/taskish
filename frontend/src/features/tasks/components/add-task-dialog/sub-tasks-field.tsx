@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/input-group";
 import { TextField, TextFieldLabel } from "@/components/ui/text-field";
 import type { TaskIn } from "../../types";
-import { DIALOG_PADDING } from "./AddTaskDialog";
+import { DIALOG_PADDING } from "./add-task-dialog";
 
 type SubTasksFieldProps = {
   subTasks: string[];

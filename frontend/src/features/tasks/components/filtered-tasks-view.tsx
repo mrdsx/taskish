@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/empty";
 import type { Task } from "../types";
 import { getFilteredTasks } from "../utils";
-import { TaskItem } from "./TaskItem";
+import { TaskItem } from "./task-item";
 
 export function FilteredTasksView(props: {
   tasks: Task[];

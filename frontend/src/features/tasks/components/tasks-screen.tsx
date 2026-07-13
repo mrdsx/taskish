@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/solid-query";
 import { Match, Switch } from "solid-js";
-import { EmptyErrorView } from "@/components/EmptyErrorView";
-import { RefreshButtonView } from "@/components/RefreshButtonView";
+import { EmptyErrorView } from "@/components/empty-error-view";
+import { RefreshButton } from "@/components/refresh-button";
 import type { Task } from "@/features/tasks";
 import { taskService } from "@/features/tasks";
 import { searchQuery } from "../stores/search";
-import { AddTaskDialog } from "./AddTaskDialog/AddTaskDialog";
-import { FilteredTasksView } from "./FilteredTasksView";
-import { LoadingTasksView } from "./LoadingTasksView";
-import { SearchBar } from "./SearchBar";
+import { AddTaskDialog } from "./add-task-dialog/add-task-dialog";
+import { FilteredTasksView } from "./filtered-tasks-view";
+import { LoadingTasksView } from "./loading-tasks-view";
+import { SearchBar } from "./search-bar";
 
 export function TasksScreen() {
   const tasksQuery = useQuery(() => ({
@@ -37,7 +37,7 @@ export function TasksScreen() {
           <Match when={tasksQuery.isSuccess}>
             <div class="flex flex-wrap gap-2">
               <AddTaskDialog />
-              <RefreshButtonView
+              <RefreshButton
                 isRefreshing={tasksQuery.isRefetching}
                 refresh={tasksQuery.refetch}
               />

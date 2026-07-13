@@ -1,12 +1,13 @@
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
-import { createSignal, type Setter, Show } from "solid-js";
+import { createSignal, type Setter } from "solid-js";
 import { createStore } from "solid-js/store";
-import { SubmitButton } from "@/components/SubmitButton";
+import { FormErrorView } from "@/components/form-error-view";
+import { SubmitButton } from "@/components/submit-button";
 import { taskService } from "../../services";
 import type { Task, TaskIn } from "../../types";
-import { DIALOG_PADDING } from "./AddTaskDialog";
-import { SubTasksField } from "./SubTasksField";
-import { TitleField } from "./TitleField";
+import { DIALOG_PADDING } from "./add-task-dialog";
+import { SubTasksField } from "./sub-tasks-field";
+import { TitleField } from "./title-field";
 
 export function AddTaskForm(props: { setIsDialogOpen: Setter<boolean> }) {
   const [formError, setFormError] = createSignal<string | null>(null);
@@ -72,9 +73,7 @@ export function AddTaskForm(props: { setIsDialogOpen: Setter<boolean> }) {
       >
         Create task
       </SubmitButton>
-      <Show when={formError() !== null}>
-        <p class={`mx-${DIALOG_PADDING} text-red-500`}>{formError()}</p>
-      </Show>
+      <FormErrorView class={`mx-${DIALOG_PADDING}`} formError={formError()} />
     </form>
   );
 }

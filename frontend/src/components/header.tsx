@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { useUserStore } from "@/stores/user";
-import { LogOutButton } from "./LogOutButton";
-import { ToggleThemeButton } from "./ToggleThemeButton";
+import { LogOutButton } from "./log-out-button";
+import { ToggleThemeButton } from "./toggle-theme-button";
 
 export function Header() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
