@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/solid-query";
 import { createSignal, Show } from "solid-js";
-import { taskService } from "@/repositories/tasks";
+import { taskService } from "@/features/tasks";
 import { useUserStore } from "@/stores/user";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";

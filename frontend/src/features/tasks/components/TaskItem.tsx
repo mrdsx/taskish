@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/solid-query";
 import { PlusIcon, Trash2Icon } from "lucide-solid";
 import { Show } from "solid-js";
-import type { Task } from "@/lib/types";
-import { taskService } from "@/repositories/tasks";
-import { Button } from "./ui/button";
-import { LoadingSwap } from "./ui/loading-swap";
+import { Button } from "@/components/ui/button";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { type Task, taskService } from "@/features/tasks";
 
 export function TaskItem(props: { task: Task }) {
   const queryClient = useQueryClient();

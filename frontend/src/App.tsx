@@ -1,9 +1,9 @@
 import { createEffect, Match, onMount, Switch } from "solid-js";
-import { AuthForm } from "./components/AuthForm";
-import { TasksScreen } from "./components/TasksScreen";
-import { taskService } from "./repositories/tasks";
-import { useThemeStore } from "./stores/theme";
-import { useUserStore } from "./stores/user";
+import { AuthForm } from "@/components/AuthForm";
+import { Header } from "@/components/Header";
+import { TasksScreen, taskService } from "@/features/tasks";
+import { useThemeStore } from "@/stores/theme";
+import { useUserStore } from "@/stores/user";
 
 export function App() {
   const user = useUserStore();
@@ -25,15 +25,18 @@ export function App() {
   });
 
   return (
-    <Switch>
-      <Match when={user().isAuthenticated}>
-        <TasksScreen />
-      </Match>
-      <Match when={!user().isAuthenticated}>
-        <main class="flex min-h-screen justify-center pt-[20vh]">
-          <AuthForm />
-        </main>
-      </Match>
-    </Switch>
+    <>
+      <Header />
+      <Switch>
+        <Match when={user().isAuthenticated}>
+          <TasksScreen />
+        </Match>
+        <Match when={!user().isAuthenticated}>
+          <main class="flex justify-center pt-[10vh]">
+            <AuthForm />
+          </main>
+        </Match>
+      </Switch>
+    </>
   );
 }

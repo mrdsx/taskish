@@ -1,10 +1,10 @@
+import type { Task, TaskIn } from "@/features/tasks";
 import { fetchApi } from "@/lib/api";
 import {
   buildErrorResult,
   buildSuccessfulResult,
   type Result,
 } from "@/lib/result";
-import type { Task, TaskIn } from "@/lib/types";
 
 // TODO: add validation
 
