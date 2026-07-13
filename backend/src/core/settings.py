@@ -6,7 +6,7 @@ from sqlalchemy.engine import URL
 
 class Settings(BaseSettings):
     app_env: Literal["prod", "dev"] = "dev"
-    throttling_delay_seconds: float = 0.5
+    throttling_delay_seconds: float = 0
 
     auth_token: str
     frontend_url: str = "http://localhost:3000"
