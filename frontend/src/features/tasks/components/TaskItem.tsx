@@ -3,7 +3,8 @@ import { PlusIcon, Trash2Icon } from "lucide-solid";
 import { Show } from "solid-js";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
-import { type Task, taskService } from "@/features/tasks";
+import { taskService } from "@/features/tasks";
+import type { Task } from "../types";
 
 export function TaskItem(props: { task: Task }) {
   const queryClient = useQueryClient();

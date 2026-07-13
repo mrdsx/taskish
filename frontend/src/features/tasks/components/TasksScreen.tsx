@@ -7,6 +7,7 @@ import { LoaderCircleIcon, PlusIcon, XIcon } from "lucide-solid";
 import { createSignal, For, Index, Match, Show, Switch } from "solid-js";
 import { createStore } from "solid-js/store";
 import { EmptyErrorView } from "@/components/EmptyErrorView";
+import { RefreshButtonView } from "@/components/RefreshButtonView";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,12 +16,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import {
   InputGroup,
   InputGroupButton,
@@ -35,6 +30,7 @@ import {
 import type { Task, TaskIn } from "@/features/tasks";
 import { getFilteredTasks, taskService } from "@/features/tasks";
 import { searchQuery } from "../stores/search";
+import { EmptyTasksView } from "./EmptyTasksView";
 import { SearchBar } from "./SearchBar";
 import { TaskItem } from "./TaskItem";
 
@@ -55,7 +51,6 @@ export function TasksScreen() {
 
       return result.data;
     },
-    retry: false,
   }));
 
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
@@ -113,116 +108,113 @@ export function TasksScreen() {
             </div>
           </Match>
           <Match when={tasksQuery.isSuccess}>
-            <Dialog
-              open={isOpen()}
-              onOpenChange={(isOpen) => setIsOpen(isOpen)}
-            >
-              <DialogTrigger
-                as={() => (
-                  <Button onClick={() => setIsOpen(true)}>Create task</Button>
-                )}
-              />
-              <DialogContent showCloseButton>
-                <DialogHeader>
-                  <DialogTitle>New task</DialogTitle>
-                </DialogHeader>
-                <form class="space-y-4" onSubmit={handleAddTask}>
-                  <TextField>
-                    <TextFieldLabel>Title</TextFieldLabel>
-                    <TextFieldInput
-                      placeholder="Enter the title..."
-                      value={newTask.title}
-                      disabled={addTaskMutation.isPending}
-                      onInput={(event) => {
-                        setNewTask((prevTask) => ({
-                          ...prevTask,
-                          title: event.currentTarget.value,
-                        }));
-                      }}
-                    />
-                  </TextField>
-                  <TextField>
-                    <TextFieldLabel>Sub tasks</TextFieldLabel>
-                    <ul class="space-y-2 overflow-auto max-h-60">
-                      <Index each={newTask.subTasks}>
-                        {(subTask, index) => (
-                          <InputGroup>
-                            <InputGroupInput
-                              data-value="sub-task"
-                              value={subTask()}
-                              disabled={addTaskMutation.isPending}
-                              onInput={(event) => {
-                                setNewTask((prevTask) => ({
-                                  ...prevTask,
-                                  subTasks: [
-                                    ...prevTask.subTasks.slice(0, index),
-                                    event.currentTarget.value,
-                                    ...prevTask.subTasks.slice(index + 1),
-                                  ],
-                                }));
-                              }}
-                            />
-                            <InputGroupButton
-                              disabled={addTaskMutation.isPending}
-                              onClick={() => {
-                                setNewTask((prevTask) => ({
-                                  ...prevTask,
-                                  subTasks: [
-                                    ...prevTask.subTasks.toSpliced(index, 1),
-                                  ],
-                                }));
-                              }}
-                            >
-                              <XIcon />
-                            </InputGroupButton>
-                          </InputGroup>
-                        )}
-                      </Index>
-                    </ul>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      disabled={addTaskMutation.isPending}
-                      onClick={() => {
-                        setNewTask((prevTask) => ({
-                          ...prevTask,
-                          subTasks: [...prevTask.subTasks, ""],
-                        }));
-                        const subTaskInputs = document.querySelectorAll(
-                          "[data-value='sub-task']",
-                        );
-                        const lastInput = subTaskInputs.item(
-                          subTaskInputs.length - 1,
-                        );
-                        (lastInput as HTMLInputElement).focus();
-                      }}
-                    >
-                      <PlusIcon />
+            <div class="flex gap-2">
+              <Dialog
+                open={isOpen()}
+                onOpenChange={(isOpen) => setIsOpen(isOpen)}
+              >
+                <DialogTrigger
+                  as={() => (
+                    <Button onClick={() => setIsOpen(true)}>Create task</Button>
+                  )}
+                />
+                <DialogContent showCloseButton>
+                  <DialogHeader>
+                    <DialogTitle>New task</DialogTitle>
+                  </DialogHeader>
+                  <form class="space-y-4" onSubmit={handleAddTask}>
+                    <TextField>
+                      <TextFieldLabel>Title</TextFieldLabel>
+                      <TextFieldInput
+                        placeholder="Enter the title..."
+                        value={newTask.title}
+                        disabled={addTaskMutation.isPending}
+                        onInput={(event) => {
+                          setNewTask((prevTask) => ({
+                            ...prevTask,
+                            title: event.currentTarget.value,
+                          }));
+                        }}
+                      />
+                    </TextField>
+                    <TextField>
+                      <TextFieldLabel>Sub tasks</TextFieldLabel>
+                      <ul class="space-y-2 overflow-auto max-h-60">
+                        <Index each={newTask.subTasks}>
+                          {(subTask, index) => (
+                            <InputGroup>
+                              <InputGroupInput
+                                data-value="sub-task"
+                                value={subTask()}
+                                disabled={addTaskMutation.isPending}
+                                onInput={(event) => {
+                                  setNewTask((prevTask) => ({
+                                    ...prevTask,
+                                    subTasks: [
+                                      ...prevTask.subTasks.slice(0, index),
+                                      event.currentTarget.value,
+                                      ...prevTask.subTasks.slice(index + 1),
+                                    ],
+                                  }));
+                                }}
+                              />
+                              <InputGroupButton
+                                disabled={addTaskMutation.isPending}
+                                onClick={() => {
+                                  setNewTask((prevTask) => ({
+                                    ...prevTask,
+                                    subTasks: [
+                                      ...prevTask.subTasks.toSpliced(index, 1),
+                                    ],
+                                  }));
+                                }}
+                              >
+                                <XIcon />
+                              </InputGroupButton>
+                            </InputGroup>
+                          )}
+                        </Index>
+                      </ul>
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        disabled={addTaskMutation.isPending}
+                        onClick={() => {
+                          setNewTask((prevTask) => ({
+                            ...prevTask,
+                            subTasks: [...prevTask.subTasks, ""],
+                          }));
+                          const subTaskInputs = document.querySelectorAll(
+                            "[data-value='sub-task']",
+                          );
+                          const lastInput = subTaskInputs.item(
+                            subTaskInputs.length - 1,
+                          );
+                          (lastInput as HTMLInputElement).focus();
+                        }}
+                      >
+                        <PlusIcon />
+                      </Button>
+                    </TextField>
+                    <Button type="submit" disabled={addTaskMutation.isPending}>
+                      <LoadingSwap isLoading={addTaskMutation.isPending}>
+                        Create task
+                      </LoadingSwap>
                     </Button>
-                  </TextField>
-                  <Button type="submit" disabled={addTaskMutation.isPending}>
-                    <LoadingSwap isLoading={addTaskMutation.isPending}>
-                      Create task
-                    </LoadingSwap>
-                  </Button>
-                  <Show when={formError() !== null}>
-                    <p class="mt-2 text-red-500">{formError()}</p>
-                  </Show>
-                </form>
-              </DialogContent>
-            </Dialog>
+                    <Show when={formError() !== null}>
+                      <p class="mt-2 text-red-500">{formError()}</p>
+                    </Show>
+                  </form>
+                </DialogContent>
+              </Dialog>
+              <RefreshButtonView
+                isRefreshing={tasksQuery.isRefetching}
+                refresh={tasksQuery.refetch}
+              />
+            </div>
             <ul class="space-y-2 max-h-100 overflow-y-auto">
               <Show when={filteredTasks().length === 0}>
-                <Empty>
-                  <EmptyHeader>
-                    <EmptyTitle>No tasks</EmptyTitle>
-                    <Show when={tasksQuery.data?.length === 0}>
-                      <EmptyDescription>
-                        Add some tasks in order to see them
-                      </EmptyDescription>
-                    </Show>
-                  </EmptyHeader>
-                </Empty>
+                <EmptyTasksView tasks={tasksQuery.data} />
               </Show>
               <For each={filteredTasks()}>
                 {(task) => (

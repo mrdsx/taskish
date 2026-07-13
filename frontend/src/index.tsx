@@ -5,7 +5,14 @@ import { App } from "./App.tsx";
 import "./index.css";
 
 const root = document.getElementById("root");
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 render(
   () => (
