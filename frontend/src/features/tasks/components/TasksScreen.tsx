@@ -5,7 +5,7 @@ import { RefreshButtonView } from "@/components/RefreshButtonView";
 import type { Task } from "@/features/tasks";
 import { taskService } from "@/features/tasks";
 import { searchQuery } from "../stores/search";
-import { AddTaskDialog } from "./AddTaskDialog";
+import { AddTaskDialog } from "./AddTaskDialog/AddTaskDialog";
 import { FilteredTasksView } from "./FilteredTasksView";
 import { LoadingTasksView } from "./LoadingTasksView";
 import { SearchBar } from "./SearchBar";
