@@ -1,5 +1,5 @@
 export type Task = {
-	id: number;
-	title: string;
-	subTasks: string[];
+  id: number;
+  title: string;
+  subTasks: string[];
 };

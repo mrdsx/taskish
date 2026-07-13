@@ -8,10 +8,10 @@ const root = document.getElementById("root");
 const queryClient = new QueryClient();
 
 render(
-	() => (
-		<QueryClientProvider client={queryClient}>
-			<App />
-		</QueryClientProvider>
-	),
-	root,
+  () => (
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>
+  ),
+  root,
 );

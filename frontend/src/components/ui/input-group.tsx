@@ -1,4 +1,5 @@
 import { TextField as TextFieldPrimitive } from "@kobalte/core/text-field";
+import { XIcon } from "lucide-solid";
 import {
   type ComponentProps,
   type ParentProps,
@@ -6,6 +7,7 @@ import {
   type ValidComponent,
 } from "solid-js";
 import { cx } from "@/lib/utils";
+import { Button } from "./button";
 
 export function InputGroup(props: ParentProps) {
   return (
@@ -35,5 +37,15 @@ export function InputGroupInput(props: InputGroupInputProps) {
       class={cx("focus-visible:outline-0 pl-2", props.class)}
       {...rest}
     />
+  );
+}
+
+export type InputGroupButtonProps = ComponentProps<"button">;
+
+export function InputGroupButton(props: InputGroupButtonProps) {
+  return (
+    <Button size="icon" variant="ghost" {...props}>
+      <XIcon />
+    </Button>
   );
 }

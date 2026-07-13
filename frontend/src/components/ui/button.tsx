@@ -45,9 +45,9 @@ export type ButtonProps<T extends ValidComponent = "button"> = ComponentProps<
 > &
   VariantProps<typeof buttonVariants>;
 
-export const Button = <T extends ValidComponent = "button">(
+export function Button<T extends ValidComponent = "button">(
   props: ButtonProps<T>,
-) => {
+) {
   const [, rest] = splitProps(props as ButtonProps, [
     "class",
     "variant",
@@ -65,4 +65,4 @@ export const Button = <T extends ValidComponent = "button">(
       {...rest}
     />
   );
-};
+}
