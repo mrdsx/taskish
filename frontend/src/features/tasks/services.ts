@@ -8,8 +8,6 @@ import {
 } from "@/lib/result";
 import { taskInSchema, taskSchema } from "./schemas";
 
-// TODO: add validation
-
 class TaskService {
   public async getAll(): Promise<Result<Task[]>> {
     const response = await fetchApi("/api/tasks");

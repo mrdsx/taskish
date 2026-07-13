@@ -13,6 +13,7 @@ from src.services.tasks import TaskService
 
 # TODO
 # ? Logging (for auditing auth attempts)
+# ? Backups
 
 app = FastAPI(lifespan=lifespan)
 crons = Crons(app)
