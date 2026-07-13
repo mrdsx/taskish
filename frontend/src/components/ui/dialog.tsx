@@ -49,12 +49,12 @@ export function DialogContent<T extends ValidComponent = "div">(
     <DialogPortal>
       <DialogPrimitive.Overlay
         data-slot="dialog-overlay"
-        class="data-expanded:animate-in data-closed:animate-out data-closed:fade-out-0 data-expanded:fade-in-0 fixed inset-0 z-50 bg-black/50"
+        class="data-closed:fade-out-0 data-expanded:fade-in-0 fixed inset-0 z-50 bg-black/50 data-closed:animate-out data-expanded:animate-in"
       />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         class={cx(
-          "bg-background data-expanded:animate-in data-closed:animate-out data-closed:fade-out-0 data-expanded:fade-in-0 data-closed:zoom-out-95 data-expanded:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+          "data-closed:fade-out-0 data-expanded:fade-in-0 data-closed:zoom-out-95 data-expanded:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-closed:animate-out data-expanded:animate-in sm:max-w-lg",
           props.class,
         )}
         {...rest}
@@ -63,7 +63,7 @@ export function DialogContent<T extends ValidComponent = "div">(
         <Show when={props.showCloseButton}>
           <DialogPrimitive.CloseButton
             aria-label="Close"
-            class="focus-visible:ring-ring absolute top-4 right-4 rounded-xs opacity-70 transition-[opacity,box-shadow] duration-200 hover:opacity-100 focus-visible:ring-2 focus-visible:outline-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            class="absolute top-4 right-4 rounded-xs opacity-70 transition-[opacity,box-shadow] duration-200 hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
           >
             <svg
               aria-label="arrow"
@@ -129,7 +129,7 @@ export function DialogTitle<T extends ValidComponent = "h2">(
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      class={cx("text-lg leading-none font-semibold", props.class)}
+      class={cx("font-semibold text-lg leading-none", props.class)}
       {...rest}
     />
   );

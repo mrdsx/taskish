@@ -31,7 +31,7 @@ export function FilteredTasksView(props: {
       </Show>
 
       <Show when={filteredTasks().length > 0}>
-        <ul class="space-y-2 max-h-100 overflow-y-auto">
+        <ul class="max-h-100 space-y-2 overflow-y-auto">
           <For each={filteredTasks()}>
             {(task) => (
               <li>

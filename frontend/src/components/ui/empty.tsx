@@ -98,7 +98,7 @@ export function EmptyTitle(props: EmptyTitleProps) {
   return (
     <div
       data-slot="empty-title"
-      class={cx("text-lg font-medium tracking-tight", props.class)}
+      class={cx("font-medium text-lg tracking-tight", props.class)}
       {...rest}
     />
   );
@@ -113,7 +113,7 @@ export function EmptyDescription(props: EmptyDescriptionProps) {
     <div
       data-slot="empty-description"
       class={cx(
-        "text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
+        "text-muted-foreground text-sm/relaxed [&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4",
         props.class,
       )}
       {...rest}
@@ -129,7 +129,7 @@ export function EmptyContent(props: EmptyContentProps) {
     <div
       data-slot="empty-content"
       class={cx(
-        "flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance",
+        "flex w-full min-w-0 max-w-sm flex-col items-center gap-4 text-balance text-sm",
         props.class,
       )}
       {...rest}

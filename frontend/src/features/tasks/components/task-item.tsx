@@ -28,17 +28,17 @@ export function TaskItem(props: { task: Task }) {
   }
 
   return (
-    <div class="flex justify-between relative gap-2 overflow-hidden rounded-lg border bg-neutral-50 dark:bg-neutral-900 p-2">
+    <div class="relative flex justify-between gap-2 overflow-hidden rounded-lg border bg-neutral-50 p-2 dark:bg-neutral-900">
       <Show when={deleteTaskMutation.isPending}>
-        <div class="bg-muted absolute inset-0 opacity-50" />
+        <div class="absolute inset-0 bg-muted opacity-50" />
       </Show>
-      <div class="w-auto space-y-2 max-w-100">
+      <div class="w-auto max-w-100 space-y-2">
         <p class="wrap-anywhere line-clamp-2 font-semibold text-[17px]">
           {props.task.title}
         </p>
         <div class="flex flex-wrap gap-1">
           {props.task.subTasks.map((subTask) => (
-            <p class="wrap-anywhere flex items-center w-fit rounded-md bg-blue-200 dark:bg-blue-900 px-2">
+            <p class="wrap-anywhere flex w-fit items-center rounded-md bg-blue-200 px-2 dark:bg-blue-900">
               {subTask}
             </p>
           ))}
