@@ -25,7 +25,7 @@ export function AuthForm() {
     },
   }));
 
-  function handleSubmit(event: SubmitEvent): void {
+  function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     setFormError(null);
 
