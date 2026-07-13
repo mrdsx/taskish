@@ -50,7 +50,7 @@ export function SubTasksField(props: SubTasksFieldProps) {
     <TextField>
       <TextFieldLabel class={`px-${DIALOG_PADDING}`}>Sub tasks</TextFieldLabel>
       <ul
-        class={`space-y-2 pt-0.75 px-${DIALOG_PADDING} max-h-60 overflow-auto`}
+        class={`space-y-2 py-0.75 px-${DIALOG_PADDING} max-h-60 overflow-auto`}
       >
         <Index each={props.subTasks}>
           {(subTask, index) => (
@@ -73,15 +73,16 @@ export function SubTasksField(props: SubTasksFieldProps) {
           )}
         </Index>
       </ul>
-      <Button
-        class={`mx-${DIALOG_PADDING}`}
-        size="icon"
-        variant="outline"
-        disabled={props.disabled}
-        onClick={handleAddSubTask}
-      >
-        <PlusIcon />
-      </Button>
+      <div class={`px-${DIALOG_PADDING}`}>
+        <Button
+          size="icon"
+          variant="outline"
+          disabled={props.disabled}
+          onClick={handleAddSubTask}
+        >
+          <PlusIcon />
+        </Button>
+      </div>
     </TextField>
   );
 }
