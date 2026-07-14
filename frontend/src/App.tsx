@@ -14,6 +14,11 @@ export function App() {
   const userStore = useUserStore();
 
   onMount(async () => {
+    if (!userStore().isAuthenticated) {
+      userStore().reset();
+      return;
+    }
+
     const result = await taskService.getAll();
     if (result.errorCode === "auth_error") {
       userStore().reset();
