@@ -29,8 +29,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
         except VerifyMismatchError:
             return AuthService.handle_failed_auth(ip)
 
-        result = AuthService.handle_successful_auth(ip)
-        if result is not None:
-            return result
+        error_result = AuthService.handle_successful_auth(ip)
+        if error_result is not None:
+            return error_result
 
         return await call_next(request)

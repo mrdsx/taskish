@@ -6,13 +6,13 @@ from src.api import api_router
 from src.core.lifespan import lifespan
 from src.core.middleware.auth import AuthMiddleware
 from src.core.middleware.rate_limiting import RateLimitingMiddleware
+from src.core.middleware.request_attempts import RequestAttemptsMiddleware
 from src.core.middleware.throttling import ThrottlingMiddleware
 from src.core.settings import settings
 from src.db import get_session
 from src.services.tasks import TaskService
 
 # TODO
-# ? Logging (for auditing auth attempts)
 # ? Backups
 
 app = FastAPI(lifespan=lifespan)
@@ -25,6 +25,7 @@ def read_root():
 
 
 # Last middleware added - first to be executed
+app.add_middleware(RequestAttemptsMiddleware)
 app.add_middleware(AuthMiddleware)
 app.add_middleware(RateLimitingMiddleware)
 app.add_middleware(ThrottlingMiddleware)
