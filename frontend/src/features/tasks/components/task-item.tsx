@@ -33,17 +33,19 @@ export function TaskItem(props: { task: Task }) {
       <Show when={deleteTaskMutation.isPending}>
         <div class="absolute inset-0 bg-muted opacity-50" />
       </Show>
-      <div class="w-auto space-y-2">
-        <p class="wrap-anywhere line-clamp-2 font-semibold text-[17px]">
+      <div class="flex w-auto flex-col justify-center gap-2">
+        <p class="wrap-anywhere line-clamp-2 font-semibold text-lg">
           {props.task.title}
         </p>
-        <div class="flex flex-wrap gap-1">
-          {props.task.subTasks.map((subTask) => (
-            <p class="wrap-anywhere flex w-fit items-center rounded-md bg-blue-200 px-2 dark:bg-blue-900">
-              {subTask}
-            </p>
-          ))}
-        </div>
+        <Show when={props.task.subTasks.length > 0}>
+          <div class="flex flex-wrap gap-1">
+            {props.task.subTasks.map((subTask) => (
+              <p class="wrap-anywhere flex w-fit items-center rounded-md bg-blue-200 px-2 dark:bg-blue-900">
+                {subTask}
+              </p>
+            ))}
+          </div>
+        </Show>
       </div>
       <div class="flex gap-2">
         <UpdateTaskDialog task={props.task} />
