@@ -1,10 +1,14 @@
 import type { Task } from "@/features/tasks";
+import type { DeletedTask } from "./types";
 
 function trimAndLowerCase(string: string): string {
   return string.trim().toLowerCase();
 }
 
-export function getFilteredTasks(tasks: Task[], searchQuery: string): Task[] {
+export function getFilteredTasks<T extends Task | DeletedTask>(
+  tasks: T[],
+  searchQuery: string,
+): T[] {
   return tasks.filter((task) => {
     const queryInTitle = trimAndLowerCase(task.title).includes(
       trimAndLowerCase(searchQuery),

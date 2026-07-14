@@ -6,7 +6,8 @@ import {
   buildSuccessfulResult,
   type Result,
 } from "@/lib/result";
-import { taskInSchema, taskSchema } from "./schemas";
+import { deletedTaskSchema, taskInSchema, taskSchema } from "./schemas";
+import type { DeletedTask } from "./types";
 
 class TaskService {
   public async getAll(): Promise<Result<Task[]>> {
@@ -91,4 +92,31 @@ class TaskService {
   }
 }
 
+class TrashService {
+  public async getTrash(): Promise<Result<DeletedTask[]>> {
+    const response = await fetchApi("/trash");
+    if (!response.ok) {
+      return buildErrorResult("internal_error");
+    }
+
+    const data = await response.json();
+    const responseParse = z.array(deletedTaskSchema).safeParse(data);
+    if (!responseParse.success) {
+      return buildErrorResult("response_validation_error");
+    }
+
+    return buildSuccessfulResult(responseParse.data);
+  }
+
+  public async restoreById(taskId: DeletedTask["id"]): Promise<Result<null>> {
+    const response = await fetchApi(`/trash/${taskId}`, { method: "POST" });
+    if (!response.ok) {
+      return buildErrorResult("internal_error");
+    }
+
+    return buildSuccessfulResult(null);
+  }
+}
+
 export const taskService = new TaskService();
+export const trashService = new TrashService();

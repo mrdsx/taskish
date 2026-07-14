@@ -1,0 +1,62 @@
+import { createQuery } from "@tanstack/solid-query";
+import { ArrowLeftIcon } from "lucide-solid";
+import { Match, Switch } from "solid-js";
+import { EmptyErrorView } from "@/components/empty-error-view";
+import { RefreshButton } from "@/components/refresh-button";
+import { Button } from "@/components/ui/button";
+import { queryKeys } from "../../constants";
+import { trashService } from "../../services";
+import { setIsDisplayingTrash } from "../../stores/display-mode";
+import { searchQuery } from "../../stores/search";
+import { LoadingTasksView } from "../loading-tasks-view";
+import { SearchBar } from "../search-bar";
+import { FilteredDeletedTasksView } from "./filtered-deleted-tasks-view";
+
+export function TrashScreen() {
+  const trashQuery = createQuery(() => ({
+    queryKey: queryKeys.trash,
+    queryFn: async () => {
+      const result = await trashService.getTrash();
+      if (!result.success) {
+        throw new Error("Failed to fetch the trash");
+      }
+
+      return result.data;
+    },
+    refetchOnMount: false,
+  }));
+
+  return (
+    <main class="flex justify-center">
+      <div class="mx-4 mt-20 w-full max-w-120 space-y-2">
+        <SearchBar disabled={trashQuery.isPending} />
+        <Switch>
+          <Match when={trashQuery.isError}>
+            <EmptyErrorView retry={trashQuery.refetch} />
+          </Match>
+          <Match when={trashQuery.isPending}>
+            <LoadingTasksView />
+          </Match>
+          <Match when={trashQuery.isSuccess}>
+            <div class="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsDisplayingTrash(false)}
+              >
+                <ArrowLeftIcon /> Go back
+              </Button>
+              <RefreshButton
+                isRefreshing={trashQuery.isRefetching}
+                refresh={trashQuery.refetch}
+              />
+            </div>
+            <FilteredDeletedTasksView
+              tasks={trashQuery.data}
+              searchQuery={searchQuery()}
+            />
+          </Match>
+        </Switch>
+      </div>
+    </main>
+  );
+}

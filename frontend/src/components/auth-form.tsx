@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/solid-query";
+import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { EyeIcon, EyeOffIcon } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
 import { taskService } from "@/features/tasks";
+import { queryKeys } from "@/features/tasks/constants";
 import { useUserStore } from "@/stores/user";
 import { FormErrorView } from "./form-error-view";
 import { SubmitButton } from "./submit-button";
@@ -18,15 +19,20 @@ export function AuthForm() {
     createSignal<boolean>(false);
   const [formError, setFormError] = createSignal<string | null>(null);
   const user = useUserStore();
-  const authMutation = useMutation(() => ({
+
+  const queryClient = useQueryClient();
+  const authMutation = createMutation(() => ({
     mutationFn: async () => {
       const result = await taskService.getAll();
       if (!result.success) {
         setFormError("Invalid credentials");
         throw new Error("Invalid credentials");
       }
+
+      return result.data;
     },
-    onSuccess: () => {
+    onSuccess: (tasks) => {
+      queryClient.setQueryData(queryKeys.tasks, tasks);
       user().setIsAuthenticated(true);
     },
   }));

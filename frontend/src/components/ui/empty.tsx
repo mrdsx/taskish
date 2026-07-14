@@ -30,7 +30,7 @@ export function Empty(props: EmptyProps) {
     <div
       data-slot="empty"
       class={emptyVariants({
-        variant: props.variant,
+        variant: props.variant as "default" | "destructive",
         class: props.class,
       })}
       {...rest}

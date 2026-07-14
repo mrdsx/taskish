@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { DIALOG_PADDING } from "../constants";
+import { DIALOG_PADDING, queryKeys } from "../constants";
 import { taskService } from "../services";
 import type { Task, TaskIn } from "../types";
 import { SubmitTaskForm } from "./submit-task-form/submit-task-form";
@@ -28,9 +28,9 @@ export function AddTaskDialog() {
       return result.data;
     },
     onSuccess: (newTask) => {
-      const tasks = queryClient.getQueryData(["tasks"]) as Task[];
+      const tasks = queryClient.getQueryData(queryKeys.tasks) as Task[];
       const newTasks = [...tasks, newTask];
-      queryClient.setQueryData(["tasks"], newTasks);
+      queryClient.setQueryData(queryKeys.tasks, newTasks);
       setIsOpen(false);
     },
   }));

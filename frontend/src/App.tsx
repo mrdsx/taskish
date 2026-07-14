@@ -1,7 +1,12 @@
-import { createEffect, Match, onMount, Switch } from "solid-js";
+import { createEffect, onMount, Show } from "solid-js";
 import { AuthForm } from "@/components/auth-form";
 import { Header } from "@/components/header";
-import { TasksScreen, taskService } from "@/features/tasks";
+import {
+  isDisplayingTrash,
+  TasksScreen,
+  TrashScreen,
+  taskService,
+} from "@/features/tasks";
 import { useThemeStore } from "@/stores/theme";
 import { useUserStore } from "@/stores/user";
 
@@ -27,16 +32,19 @@ export function App() {
   return (
     <>
       <Header />
-      <Switch>
-        <Match when={user().isAuthenticated}>
+      <Show when={user().isAuthenticated}>
+        <Show when={isDisplayingTrash()}>
+          <TrashScreen />
+        </Show>
+        <Show when={!isDisplayingTrash()}>
           <TasksScreen />
-        </Match>
-        <Match when={!user().isAuthenticated}>
-          <main class="flex justify-center pt-[10vh]">
-            <AuthForm />
-          </main>
-        </Match>
-      </Switch>
+        </Show>
+      </Show>
+      <Show when={!user().isAuthenticated}>
+        <main class="flex justify-center pt-[10vh]">
+          <AuthForm />
+        </main>
+      </Show>
     </>
   );
 }
