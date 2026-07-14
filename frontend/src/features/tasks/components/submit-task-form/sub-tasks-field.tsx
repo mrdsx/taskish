@@ -1,5 +1,5 @@
 import { PlusIcon, XIcon } from "lucide-solid";
-import { Index } from "solid-js";
+import { Index, Show } from "solid-js";
 import type { SetStoreFunction } from "solid-js/store";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,30 +49,32 @@ export function SubTasksField(props: SubTasksFieldProps) {
   return (
     <TextField>
       <TextFieldLabel class={`px-${DIALOG_PADDING}`}>Sub tasks</TextFieldLabel>
-      <ul
-        class={`space-y-2 py-0.75 px-${DIALOG_PADDING} max-h-60 overflow-auto`}
-      >
-        <Index each={props.subTasks}>
-          {(subTask, index) => (
-            <InputGroup>
-              <InputGroupInput
-                data-value="sub-task"
-                value={subTask()}
-                disabled={props.disabled}
-                onInput={(event) =>
-                  handleUpdateSubTask(event.currentTarget.value, index)
-                }
-              />
-              <InputGroupButton
-                disabled={props.disabled}
-                onClick={() => handleDeleteSubTask(index)}
-              >
-                <XIcon />
-              </InputGroupButton>
-            </InputGroup>
-          )}
-        </Index>
-      </ul>
+      <Show when={props.subTasks.length > 0}>
+        <ul
+          class={`space-y-2 py-0.75 px-${DIALOG_PADDING} max-h-60 overflow-auto`}
+        >
+          <Index each={props.subTasks}>
+            {(subTask, index) => (
+              <InputGroup>
+                <InputGroupInput
+                  data-value="sub-task"
+                  value={subTask()}
+                  disabled={props.disabled}
+                  onInput={(event) =>
+                    handleUpdateSubTask(event.currentTarget.value, index)
+                  }
+                />
+                <InputGroupButton
+                  disabled={props.disabled}
+                  onClick={() => handleDeleteSubTask(index)}
+                >
+                  <XIcon />
+                </InputGroupButton>
+              </InputGroup>
+            )}
+          </Index>
+        </ul>
+      </Show>
       <div class={`px-${DIALOG_PADDING}`}>
         <Button
           size="icon"
