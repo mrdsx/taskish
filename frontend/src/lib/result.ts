@@ -4,6 +4,7 @@ type ErrorCode =
   | "client_validation_error"
   | "server_validation_error" //423
   | "response_validation_error"
+  | "too_many_requests_error" //429
   | "internal_error" //500
   | "unknown_error";
 
@@ -33,6 +34,7 @@ const errorCodesObject = {
   401: "auth_error",
   404: "not_found_error",
   423: "server_validation_error",
+  429: "too_many_requests_error",
   500: "internal_error",
 } as const satisfies Record<number, Exclude<ErrorCode, "unknown_error">>;
 
@@ -46,6 +48,7 @@ const errorMessagesObject = {
   client_validation_error: "Invalid data",
   server_validation_error: "Invalid data",
   response_validation_error: "Invalid response",
+  too_many_requests_error: "Too many requests",
   internal_error: "Internal server error",
   unknown_error: "Unexpected error",
 } as const satisfies Record<ErrorCode, string>;
