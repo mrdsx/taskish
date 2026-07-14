@@ -71,7 +71,7 @@ export function SubmitTaskForm(props: SubmitTaskFormProps) {
           Submit
         </SubmitButton>
       </div>
-      <FormErrorView class={`mx-${DIALOG_PADDING}`} formError={formError()} />
+      <FormErrorView class={`px-${DIALOG_PADDING}`} formError={formError()} />
     </form>
   );
 }

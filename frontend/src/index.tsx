@@ -1,4 +1,5 @@
 /* @refresh reload */
+import { ColorModeProvider } from "@kobalte/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { render } from "solid-js/web";
 import { App } from "./App.tsx";
@@ -17,7 +18,9 @@ const queryClient = new QueryClient({
 render(
   () => (
     <QueryClientProvider client={queryClient}>
-      <App />
+      <ColorModeProvider>
+        <App />
+      </ColorModeProvider>
     </QueryClientProvider>
   ),
   root,

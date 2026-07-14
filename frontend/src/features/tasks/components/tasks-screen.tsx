@@ -1,11 +1,13 @@
 import { createQuery } from "@tanstack/solid-query";
 import { TrashIcon } from "lucide-solid";
 import { Match, Switch } from "solid-js";
+import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
 import { Button } from "@/components/ui/button";
 import type { Task } from "@/features/tasks";
 import { taskService } from "@/features/tasks";
+import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../constants";
 import { setIsDisplayingTrash } from "../stores/display-mode";
 import { searchQuery } from "../stores/search";
@@ -20,6 +22,7 @@ export function TasksScreen() {
     queryFn: async (): Promise<Task[]> => {
       const result = await taskService.getAll();
       if (!result.success) {
+        toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to fetch tasks");
       }
 

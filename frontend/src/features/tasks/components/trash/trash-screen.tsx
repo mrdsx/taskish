@@ -1,9 +1,11 @@
 import { createQuery } from "@tanstack/solid-query";
 import { ArrowLeftIcon } from "lucide-solid";
 import { Match, Switch } from "solid-js";
+import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
 import { Button } from "@/components/ui/button";
+import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../../constants";
 import { trashService } from "../../services";
 import { setIsDisplayingTrash } from "../../stores/display-mode";
@@ -18,6 +20,7 @@ export function TrashScreen() {
     queryFn: async () => {
       const result = await trashService.getTrash();
       if (!result.success) {
+        toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to fetch the trash");
       }
 

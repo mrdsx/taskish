@@ -1,8 +1,10 @@
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { ArchiveRestoreIcon } from "lucide-solid";
 import { Show } from "solid-js";
+import { toast } from "somoto";
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../../constants";
 import { trashService } from "../../services";
 import { taskItemStyles } from "../../styles/task-item";
@@ -14,6 +16,7 @@ export function DeletedTaskItem(props: { task: DeletedTask }) {
     mutationFn: async () => {
       const result = await trashService.restoreById(props.task.id);
       if (!result.success) {
+        toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to restore the task");
       }
 

@@ -1,8 +1,10 @@
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { EyeIcon, EyeOffIcon } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
+import { toast } from "somoto";
 import { taskService } from "@/features/tasks";
 import { queryKeys } from "@/features/tasks/constants";
+import { getErrorMessage } from "@/lib/result";
 import { useUserStore } from "@/stores/user";
 import { FormErrorView } from "./form-error-view";
 import { SubmitButton } from "./submit-button";
@@ -18,22 +20,22 @@ export function AuthForm() {
   const [isAuthTokenVisible, setIsAuthTokenVisible] =
     createSignal<boolean>(false);
   const [formError, setFormError] = createSignal<string | null>(null);
-  const user = useUserStore();
+  const userStore = useUserStore();
 
   const queryClient = useQueryClient();
   const authMutation = createMutation(() => ({
     mutationFn: async () => {
       const result = await taskService.getAll();
       if (!result.success) {
-        setFormError("Invalid credentials");
-        throw new Error("Invalid credentials");
+        toast.error(getErrorMessage(result.errorCode));
+        throw new Error("Failed to authenticate");
       }
 
       return result.data;
     },
     onSuccess: (tasks) => {
       queryClient.setQueryData(queryKeys.tasks, tasks);
-      user().setIsAuthenticated(true);
+      userStore().setIsAuthenticated(true);
     },
   }));
 
@@ -41,8 +43,8 @@ export function AuthForm() {
     event.preventDefault();
     setFormError(null);
 
-    const apiUrl = user().apiUrl.trim();
-    const authToken = user().authToken.trim();
+    const apiUrl = userStore().apiUrl.trim();
+    const authToken = userStore().authToken.trim();
 
     if (apiUrl.length === 0) {
       setFormError("API URL field is empty");
@@ -68,9 +70,9 @@ export function AuthForm() {
             <TextFieldInput
               type="text"
               placeholder="http://api.example.com"
-              value={user().apiUrl}
+              value={userStore().apiUrl}
               onInput={(event) => {
-                user().setApiUrl(event.currentTarget.value);
+                userStore().setApiUrl(event.currentTarget.value);
               }}
             />
           </TextField>
@@ -80,9 +82,9 @@ export function AuthForm() {
               <InputGroupInput
                 type={isAuthTokenVisible() ? "text" : "password"}
                 placeholder="Secret token"
-                value={user().authToken}
+                value={userStore().authToken}
                 onInput={(event) => {
-                  user().setAuthToken(event.currentTarget.value);
+                  userStore().setAuthToken(event.currentTarget.value);
                 }}
               />
               <InputGroupButton

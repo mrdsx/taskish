@@ -1,6 +1,7 @@
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { SquarePenIcon } from "lucide-solid";
 import { createSignal } from "solid-js";
+import { toast } from "somoto";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { getErrorMessage } from "@/lib/result";
 import { DIALOG_PADDING, queryKeys } from "../constants";
 import { taskService } from "../services";
 import type { Task, TaskIn } from "../types";
@@ -22,6 +24,7 @@ export function UpdateTaskDialog(props: { task: Task }) {
     mutationFn: async (taskIn: TaskIn): Promise<Task> => {
       const result = await taskService.updateById(props.task.id, taskIn);
       if (!result.success) {
+        toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to update the task");
       }
 

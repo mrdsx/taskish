@@ -4,6 +4,7 @@ import { fetchApi } from "@/lib/api";
 import {
   buildErrorResult,
   buildSuccessfulResult,
+  getErrorCode,
   type Result,
 } from "@/lib/result";
 import { deletedTaskSchema, taskInSchema, taskSchema } from "./schemas";
@@ -13,7 +14,7 @@ class TaskService {
   public async getAll(): Promise<Result<Task[]>> {
     const response = await fetchApi("/tasks");
     if (!response.ok) {
-      return buildErrorResult("internal_error");
+      return buildErrorResult(getErrorCode(response.status));
     }
 
     const data = await response.json();
@@ -39,7 +40,7 @@ class TaskService {
       body: JSON.stringify(inputParse.data),
     });
     if (!response.ok) {
-      return buildErrorResult("internal_error");
+      return buildErrorResult(getErrorCode(response.status));
     }
 
     const data = await response.json();
@@ -68,7 +69,7 @@ class TaskService {
       body: JSON.stringify(inputParse.data),
     });
     if (!response.ok) {
-      return buildErrorResult("internal_error");
+      return buildErrorResult(getErrorCode(response.status));
     }
 
     const data = await response.json();
@@ -85,7 +86,7 @@ class TaskService {
       method: "DELETE",
     });
     if (!response.ok) {
-      return buildErrorResult("internal_error");
+      return buildErrorResult(getErrorCode(response.status));
     }
 
     return buildSuccessfulResult(null);
@@ -96,7 +97,7 @@ class TrashService {
   public async getTrash(): Promise<Result<DeletedTask[]>> {
     const response = await fetchApi("/trash");
     if (!response.ok) {
-      return buildErrorResult("internal_error");
+      return buildErrorResult(getErrorCode(response.status));
     }
 
     const data = await response.json();
@@ -111,7 +112,7 @@ class TrashService {
   public async restoreById(taskId: DeletedTask["id"]): Promise<Result<null>> {
     const response = await fetchApi(`/trash/${taskId}`, { method: "POST" });
     if (!response.ok) {
-      return buildErrorResult("internal_error");
+      return buildErrorResult(getErrorCode(response.status));
     }
 
     return buildSuccessfulResult(null);

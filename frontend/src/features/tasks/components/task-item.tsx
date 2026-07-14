@@ -1,6 +1,8 @@
 import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { Show } from "solid-js";
+import { toast } from "somoto";
 import { taskService } from "@/features/tasks";
+import { getErrorMessage } from "@/lib/result";
 import { DEFAULT_EXPIRATION_TIME, queryKeys } from "../constants";
 import { taskItemStyles } from "../styles/task-item";
 import type { DeletedTask, Task } from "../types";
@@ -13,6 +15,7 @@ export function TaskItem(props: { task: Task }) {
     mutationFn: async () => {
       const result = await taskService.deleteById(props.task.id);
       if (!result.success) {
+        toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to delete task");
       }
     },
