@@ -1,13 +1,21 @@
 import { useMutation } from "@tanstack/solid-query";
-import { createSignal } from "solid-js";
+import { EyeIcon, EyeOffIcon } from "lucide-solid";
+import { createSignal, Show } from "solid-js";
 import { taskService } from "@/features/tasks";
 import { useUserStore } from "@/stores/user";
 import { FormErrorView } from "./form-error-view";
 import { SubmitButton } from "./submit-button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import {
+  InputGroup,
+  InputGroupButton,
+  InputGroupInput,
+} from "./ui/input-group";
 import { TextField, TextFieldInput, TextFieldLabel } from "./ui/text-field";
 
 export function AuthForm() {
+  const [isAuthTokenVisible, setIsAuthTokenVisible] =
+    createSignal<boolean>(false);
   const [formError, setFormError] = createSignal<string | null>(null);
   const user = useUserStore();
   const authMutation = useMutation(() => ({
@@ -62,14 +70,26 @@ export function AuthForm() {
           </TextField>
           <TextField>
             <TextFieldLabel>Auth token</TextFieldLabel>
-            <TextFieldInput
-              type="text"
-              placeholder="Secret token"
-              value={user().authToken}
-              onInput={(event) => {
-                user().setAuthToken(event.currentTarget.value);
-              }}
-            />
+            <InputGroup>
+              <InputGroupInput
+                type={isAuthTokenVisible() ? "text" : "password"}
+                placeholder="Secret token"
+                value={user().authToken}
+                onInput={(event) => {
+                  user().setAuthToken(event.currentTarget.value);
+                }}
+              />
+              <InputGroupButton
+                onClick={() => setIsAuthTokenVisible(!isAuthTokenVisible())}
+              >
+                <Show when={isAuthTokenVisible()}>
+                  <EyeOffIcon />
+                </Show>
+                <Show when={!isAuthTokenVisible()}>
+                  <EyeIcon />
+                </Show>
+              </InputGroupButton>
+            </InputGroup>
           </TextField>
           <SubmitButton class="w-full" isLoading={authMutation.isPending}>
             Log In

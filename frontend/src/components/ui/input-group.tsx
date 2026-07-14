@@ -1,5 +1,4 @@
 import { TextField as TextFieldPrimitive } from "@kobalte/core/text-field";
-import { XIcon } from "lucide-solid";
 import {
   type ComponentProps,
   type ParentProps,
@@ -13,6 +12,7 @@ export function InputGroup(props: ParentProps) {
   return (
     <TextFieldPrimitive>
       <div
+        data-slot="input-group"
         class={cx(
           "flex h-9 items-center overflow-hidden rounded-md border border-input bg-transparent text-base shadow-xs outline-none transition-[color,box-shadow] selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground md:text-sm dark:bg-input/30",
           "has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-[button:focus-visible]:ring-0",
@@ -35,8 +35,8 @@ export function InputGroupInput(props: InputGroupInputProps) {
 
   return (
     <TextFieldPrimitive.Input
-      data-slot="text-field"
-      class={cx("w-full pl-2 focus-visible:outline-0", props.class)}
+      data-slot="input-group-input"
+      class={cx("w-full px-2 focus-visible:outline-0", props.class)}
       {...rest}
     />
   );
@@ -46,8 +46,13 @@ export type InputGroupButtonProps = ComponentProps<"button">;
 
 export function InputGroupButton(props: InputGroupButtonProps) {
   return (
-    <Button size="icon" variant="ghost" {...props}>
-      <XIcon />
+    <Button
+      data-slot="input-group-button"
+      size="icon"
+      variant="ghost"
+      {...props}
+    >
+      {props.children}
     </Button>
   );
 }
