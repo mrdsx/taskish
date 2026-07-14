@@ -7,12 +7,13 @@ import {
 } from "@/components/ui/input-group";
 import { searchQuery, setSearchQuery } from "../stores/search";
 
-export function SearchBar() {
+export function SearchBar(props: { disabled?: boolean }) {
   return (
     <InputGroup>
       <InputGroupInput
         placeholder="Type your search query..."
         value={searchQuery()}
+        disabled={props.disabled}
         onInput={(event) => {
           setSearchQuery(event.currentTarget.value);
         }}

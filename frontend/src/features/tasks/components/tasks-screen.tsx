@@ -26,7 +26,7 @@ export function TasksScreen() {
   return (
     <main class="flex justify-center">
       <div class="mx-4 mt-20 w-full max-w-120 space-y-2">
-        <SearchBar />
+        <SearchBar disabled={tasksQuery.isPending} />
         <Switch>
           <Match when={tasksQuery.isError}>
             <EmptyErrorView retry={tasksQuery.refetch} />
