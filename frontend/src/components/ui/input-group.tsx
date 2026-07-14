@@ -14,7 +14,7 @@ export function InputGroup(props: ParentProps) {
     <TextFieldPrimitive>
       <div
         class={cx(
-          "flex h-9 items-center rounded-md border border-input bg-transparent text-base shadow-xs outline-none transition-[color,box-shadow] selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground md:text-sm dark:bg-input/30",
+          "flex h-9 items-center overflow-hidden rounded-md border border-input bg-transparent text-base shadow-xs outline-none transition-[color,box-shadow] selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground md:text-sm dark:bg-input/30",
           "has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-[button:focus-visible]:ring-0",
           "focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50",
           "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
