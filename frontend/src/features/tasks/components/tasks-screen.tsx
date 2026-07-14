@@ -28,7 +28,6 @@ export function TasksScreen() {
 
       return result.data;
     },
-    refetchOnMount: false,
   }));
 
   return (

@@ -1,4 +1,5 @@
 import { Show } from "solid-js";
+import { RecentRequestAttemptsDialog } from "@/features/request-attempts";
 import { useUserStore } from "@/stores/user";
 import { LogOutButton } from "./log-out-button";
 import { ToggleThemeButton } from "./toggle-theme-button";
@@ -10,6 +11,7 @@ export function Header() {
     <header class="flex justify-between px-6 py-4">
       <h1 class="font-semibold text-xl">Taskish</h1>
       <div class="flex items-center gap-2">
+        <RecentRequestAttemptsDialog />
         <ToggleThemeButton />
         <Show when={isAuthenticated()}>
           <LogOutButton />

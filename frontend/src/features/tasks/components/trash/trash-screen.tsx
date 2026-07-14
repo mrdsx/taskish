@@ -26,7 +26,6 @@ export function TrashScreen() {
 
       return result.data;
     },
-    refetchOnMount: false,
   }));
 
   return (
