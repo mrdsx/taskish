@@ -1,3 +1,7 @@
+import { createQuery } from "@tanstack/solid-query";
+import { LoaderCircle, ShieldIcon } from "lucide-solid";
+import { createSignal, For, Match, Switch } from "solid-js";
+import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
 import { Button } from "@/components/ui/button";
@@ -9,10 +13,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getErrorMessage } from "@/lib/result";
-import { createQuery } from "@tanstack/solid-query";
-import { LoaderCircle, ShieldIcon } from "lucide-solid";
-import { createSignal, For, Match, Switch } from "solid-js";
-import { toast } from "somoto";
 import { queryKeys } from "../query-keys";
 import { requestAttemptsService } from "../services";
 
@@ -67,7 +67,7 @@ export function RecentRequestAttemptsDialog() {
             <LoaderCircle class="animate-spin justify-self-center my-2" />
           </Match>
           <Match when={requestAttemptsQuery.isSuccess}>
-            <ul class="max-h-80 space-y-2 overflow-auto">
+            <ul class="max-h-80 space-y-4 overflow-auto">
               <For
                 each={sortedRequestAttempts()}
                 fallback={<div>No logins found</div>}
@@ -76,12 +76,18 @@ export function RecentRequestAttemptsDialog() {
                   <li>
                     <p>
                       <span class="font-semibold">{index() + 1}.</span>{" "}
-                      {requestAttempt.host}
+                      {requestAttempt.host} - {requestAttempt.location}
                     </p>
                     <p class="text-sm text-muted-foreground">
                       Last request:{" "}
                       {new Date(requestAttempt.lastAttempt).toLocaleString()}
                     </p>
+                    <img
+                      class="mt-2"
+                      src={requestAttempt.flagUrl}
+                      alt=""
+                      width={50}
+                    />
                   </li>
                 )}
               </For>
