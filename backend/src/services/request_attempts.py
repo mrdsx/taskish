@@ -109,6 +109,8 @@ class RequestAttemptService:
             geolocation = host_data.geolocation
             if geolocation is not None:
                 location = f"{geolocation.country}, {geolocation.region_name}, {geolocation.city}"
+                if geolocation.region_name.lower() == geolocation.city.lower():
+                    location = f"{geolocation.country}, {geolocation.city}"
 
                 country_code = geolocation.country_code.lower()
                 flag_file = settings.static_dir / "flags" / f"{country_code}.svg"
