@@ -2,6 +2,7 @@ import { createQuery } from "@tanstack/solid-query";
 import { LoaderCircle, ShieldIcon } from "lucide-solid";
 import { createSignal, For, Match, Switch } from "solid-js";
 import { toast } from "somoto";
+import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,7 +61,7 @@ export function RecentRequestAttemptsDialog() {
         </DialogHeader>
         <Switch>
           <Match when={requestAttemptsQuery.isError}>
-            <p class="text-destructive">Failed to fetch request</p>
+            <EmptyErrorView retry={requestAttemptsQuery.refetch} />
           </Match>
           <Match when={requestAttemptsQuery.isPending}>
             <LoaderCircle class="animate-spin justify-self-center my-2" />
