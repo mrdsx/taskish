@@ -10,7 +10,7 @@ from src.services.request_attempts import RequestAttemptsService
 router = APIRouter(prefix="/request-attempts")
 
 
-@router.get("/", response_model=list[RequestAttemptOut])
+@router.get("", response_model=list[RequestAttemptOut])
 async def get_request_attempts(
     request_attempts_service: Annotated[
         RequestAttemptsService, Depends(RequestAttemptsService)

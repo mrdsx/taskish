@@ -10,7 +10,7 @@ from src.services.tasks import TaskService
 router = APIRouter(prefix="/tasks")
 
 
-@router.get("/", response_model=list[TaskOut])
+@router.get("", response_model=list[TaskOut])
 async def get_tasks(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
@@ -27,7 +27,7 @@ async def get_task_by_id(
     return await task_service.fetch_task_by_id(id=task_id, session=session)
 
 
-@router.post("/", response_model=TaskOut)
+@router.post("", response_model=TaskOut)
 async def create_task(
     task: TaskIn,
     task_service: Annotated[TaskService, Depends(TaskService)],

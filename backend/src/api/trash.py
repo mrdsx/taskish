@@ -10,7 +10,7 @@ from src.services.tasks import TaskService
 router = APIRouter(prefix="/trash")
 
 
-@router.get("/", response_model=list[DeletedTaskOut])
+@router.get("", response_model=list[DeletedTaskOut])
 async def get_tasks_from_trash(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
