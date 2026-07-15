@@ -1,9 +1,8 @@
-from datetime import datetime
-
 from sqlalchemy import Sequence, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.request_attempts import DB_RequestAttempt
+from src.utils.time import get_now
 
 
 class RequestAttemptsService:
@@ -28,11 +27,11 @@ class RequestAttemptsService:
             new_db_attempt = DB_RequestAttempt(
                 host=host,
                 attempts=1,
-                last_attempt=datetime.now(),
+                last_attempt=get_now(),
             )
             session.add(new_db_attempt)
             await session.commit()
         else:
             db_attempt.attempts += 1
-            db_attempt.last_attempt = datetime.now()
+            db_attempt.last_attempt = get_now()
             await session.commit()

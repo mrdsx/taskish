@@ -70,8 +70,6 @@ class TaskService:
         await session.commit()
 
     def _get_expiration_clause(self, deleted: bool) -> ColumnElement[bool]:
-        where_clause = DB_Task.expires_at.is_(None)
         if deleted:
-            where_clause = DB_Task.expires_at > get_now()
-
-        return where_clause
+            return DB_Task.expires_at > get_now()
+        return DB_Task.expires_at.is_(None)
