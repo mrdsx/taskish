@@ -1,6 +1,9 @@
 import { useUserStore } from "@/stores/user";
 
-export async function fetchApi(path: `/${string}`, init?: RequestInit) {
+export async function fetchApi(
+  path: `/${string}`,
+  init?: RequestInit,
+): Promise<Response> {
   const apiUrl = useUserStore.getState().apiUrl;
   const authToken = useUserStore.getState().authToken;
 

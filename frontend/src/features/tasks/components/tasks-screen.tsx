@@ -1,6 +1,6 @@
 import { createQuery } from "@tanstack/solid-query";
 import { TrashIcon } from "lucide-solid";
-import { Match, Switch } from "solid-js";
+import { createEffect, Match, Switch } from "solid-js";
 import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import type { Task } from "@/features/tasks";
 import { taskService } from "@/features/tasks";
 import { getErrorMessage } from "@/lib/result";
+import { useUserStore } from "@/stores/user";
 import { queryKeys } from "../constants";
 import { setIsDisplayingTrash } from "../stores/display-mode";
 import { searchQuery } from "../stores/search";
@@ -17,6 +18,7 @@ import { LoadingTasksView } from "./loading-tasks-view";
 import { SearchBar } from "./search-bar";
 
 export function TasksScreen() {
+  const resetUserStore = useUserStore((state) => state.reset);
   const tasksQuery = createQuery(() => ({
     queryKey: queryKeys.tasks,
     queryFn: async (): Promise<Task[]> => {
@@ -28,7 +30,15 @@ export function TasksScreen() {
 
       return result.data;
     },
+    networkMode: "offlineFirst",
+    gcTime: 1000 * 60 * 60 * 24,
   }));
+
+  createEffect(() => {
+    if (tasksQuery.isError) {
+      resetUserStore();
+    }
+  });
 
   return (
     <main class="flex justify-center">
