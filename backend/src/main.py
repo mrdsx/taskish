@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi_crons import Crons
 
 from src.api import api_router
@@ -12,10 +13,9 @@ from src.core.settings import settings
 from src.db import get_session
 from src.repositories.tasks import TaskRepository
 
-# TODO
-# ? Backups
-
 app = FastAPI(lifespan=lifespan)
+app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
+
 crons = Crons(app)
 
 

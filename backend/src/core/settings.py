@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -13,6 +14,10 @@ class Settings(BaseSettings):
     @property
     def allowed_origins(self) -> list[str]:
         return [self.frontend_url]
+
+    @property
+    def static_dir(self) -> Path:
+        return Path("static")
 
     db_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/database"
     db_ssl_mode: Literal["require"] | None = None

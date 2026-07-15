@@ -19,6 +19,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 content={"detail": "Client info is missing"},
             )
 
+        path = request.scope.get("path")
+        if path is not None and isinstance(path, str) and path.startswith("/static"):
+            return await call_next(request)
+
         ip = request.client.host
         auth_token = request.headers.get("auth-token")
         if auth_token is None:
