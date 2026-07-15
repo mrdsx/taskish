@@ -16,7 +16,8 @@ import { queryKeys } from "../query-keys";
 import { requestAttemptsService } from "../services";
 
 export function RecentRequestAttemptsDialog() {
-  const [isOpen, setIsOpen] = createSignal<boolean>(false);
+  const [wasOpenedForFirstTime, setWasOpenedForFirstTime] =
+    createSignal<boolean>(false);
 
   const requestAttemptsQuery = createQuery(() => ({
     queryKey: queryKeys.ipList,
@@ -29,6 +30,7 @@ export function RecentRequestAttemptsDialog() {
 
       return result.data;
     },
+    enabled: wasOpenedForFirstTime(),
   }));
 
   const sortedRequestAttempts = () =>
@@ -40,7 +42,7 @@ export function RecentRequestAttemptsDialog() {
     });
 
   return (
-    <Dialog open={isOpen()} onOpenChange={(isOpen) => setIsOpen(isOpen)}>
+    <Dialog onOpenChange={() => setWasOpenedForFirstTime(true)}>
       <DialogTrigger as={Button} variant="outline">
         <ShieldIcon />
       </DialogTrigger>
@@ -57,9 +59,11 @@ export function RecentRequestAttemptsDialog() {
           </DialogTitle>
         </DialogHeader>
         <Switch>
-          <Match when={requestAttemptsQuery.isError}>Error</Match>
+          <Match when={requestAttemptsQuery.isError}>
+            <p class="text-destructive">Failed to fetch request</p>
+          </Match>
           <Match when={requestAttemptsQuery.isPending}>
-            <LoaderCircle class="animate-spin justify-self-center my-5" />
+            <LoaderCircle class="animate-spin justify-self-center my-2" />
           </Match>
           <Match when={requestAttemptsQuery.isSuccess}>
             <ul class="max-h-80 space-y-2 overflow-auto">
