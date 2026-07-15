@@ -69,7 +69,7 @@ export function AuthForm() {
             <TextFieldLabel>API URL</TextFieldLabel>
             <TextFieldInput
               type="text"
-              placeholder="http://api.example.com"
+              placeholder="https://api.example.com"
               value={userStore().apiUrl}
               onInput={(event) => {
                 userStore().setApiUrl(event.currentTarget.value);
