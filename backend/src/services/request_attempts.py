@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 
 import httpx
-from fastapi import Request
+from cachetools import TTLCache
+from fastapi import HTTPException, Request, status
 from sqlalchemy import Sequence
 
 from src.core.settings import settings
@@ -28,6 +29,10 @@ class RequestAttemptDTO:
     last_attempt: datetime
     location: str
     flag_url: str
+
+
+REQUESTS_LEFT_HEADER = "x-rl"
+cache = TTLCache(maxsize=100, ttl=60 * 60 * 24)
 
 
 class RequestAttemptService:
@@ -67,14 +72,28 @@ class RequestAttemptService:
         self,
         hosts: list[str],
     ) -> list[HostGeolocation | InvalidHostGeolocation]:
+        cache_key = tuple(hosts)
+        result = cache.get(cache_key)
+        if result is not None:
+            return result  # ty:ignore[invalid-return-type]
+
         async with httpx.AsyncClient() as client:
             response = await client.post(
-                "http://ip-api.com/batch?fields=status,country,countryCode,regionName,city,query",
+                f"{settings.ip_api_url}/batch?fields=status,country,countryCode,regionName,city,query",
                 json=hosts,
             )
-        data = response.json()
 
-        return HostGeolocationList.validate_python(data)
+        requests_left = response.headers.get(REQUESTS_LEFT_HEADER)
+        if requests_left == "0":
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+
+        data = response.json()
+        result = HostGeolocationList.validate_python(data)
+        cache[cache_key] = result  # ty:ignore[invalid-assignment]
+
+        return result
 
     def _map_hosts_data(
         self,

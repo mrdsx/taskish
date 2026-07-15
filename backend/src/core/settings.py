@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:3000"
 
     @property
+    def ip_api_url(self) -> str:
+        return "http://ip-api.com"
+
+    @property
     def allowed_origins(self) -> list[str]:
         return [self.frontend_url]
 
