@@ -18,3 +18,8 @@ export const taskInSchema = z.object({
 export const deletedTaskSchema = taskSchema.extend({
   expiresAt: z.string(),
 });
+
+export const exportedTasksSchema = z.object({
+  tasks: z.array(taskSchema),
+  trash: z.array(deletedTaskSchema),
+});

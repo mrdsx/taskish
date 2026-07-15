@@ -7,8 +7,13 @@ import {
   getErrorCode,
   type Result,
 } from "@/lib/result";
-import { deletedTaskSchema, taskInSchema, taskSchema } from "./schemas";
-import type { DeletedTask } from "./types";
+import {
+  deletedTaskSchema,
+  exportedTasksSchema,
+  taskInSchema,
+  taskSchema,
+} from "./schemas";
+import type { DeletedTask, ExportedTasks } from "./types";
 
 class TaskService {
   public async getAll(): Promise<Result<Task[]>> {
@@ -119,5 +124,23 @@ class TrashService {
   }
 }
 
+class ExportService {
+  public async exportTasksToJSON(): Promise<Result<ExportedTasks>> {
+    const response = await fetchApi("/export/json");
+    if (!response.ok) {
+      return buildErrorResult(getErrorCode(response.status));
+    }
+
+    const data = await response.json();
+    const responseParse = exportedTasksSchema.safeParse(data);
+    if (!responseParse.success) {
+      return buildErrorResult("response_validation_error");
+    }
+
+    return buildSuccessfulResult(responseParse.data);
+  }
+}
+
 export const taskService = new TaskService();
 export const trashService = new TrashService();
+export const exportService = new ExportService();

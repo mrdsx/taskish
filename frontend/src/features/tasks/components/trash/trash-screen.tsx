@@ -1,15 +1,16 @@
-import { createQuery } from "@tanstack/solid-query";
-import { ArrowLeftIcon } from "lucide-solid";
-import { Match, Switch } from "solid-js";
-import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/result";
+import { createQuery } from "@tanstack/solid-query";
+import { ArrowLeftIcon } from "lucide-solid";
+import { Match, Switch } from "solid-js";
+import { toast } from "somoto";
 import { queryKeys } from "../../constants";
 import { trashService } from "../../services";
 import { setIsDisplayingTrash } from "../../stores/display-mode";
 import { searchQuery } from "../../stores/search";
+import { ExportTasksButton } from "../export-tasks-button";
 import { LoadingTasksView } from "../loading-tasks-view";
 import { SearchBar } from "../search-bar";
 import { FilteredDeletedTasksView } from "./filtered-deleted-tasks-view";
@@ -51,6 +52,7 @@ export function TrashScreen() {
                 isRefreshing={trashQuery.isRefetching}
                 refresh={trashQuery.refetch}
               />
+              <ExportTasksButton />
             </div>
             <FilteredDeletedTasksView
               tasks={trashQuery.data}

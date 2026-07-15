@@ -13,6 +13,7 @@ import { queryKeys } from "../constants";
 import { setIsDisplayingTrash } from "../stores/display-mode";
 import { searchQuery } from "../stores/search";
 import { AddTaskDialog } from "./add-task-dialog";
+import { ExportTasksButton } from "./export-tasks-button";
 import { FilteredTasksView } from "./filtered-tasks-view";
 import { LoadingTasksView } from "./loading-tasks-view";
 import { SearchBar } from "./search-bar";
@@ -59,6 +60,7 @@ export function TasksScreen() {
                   isRefreshing={tasksQuery.isRefetching}
                   refresh={tasksQuery.refetch}
                 />
+                <ExportTasksButton />
               </div>
               <Button
                 variant="outline"
