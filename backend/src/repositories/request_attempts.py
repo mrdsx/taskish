@@ -5,7 +5,7 @@ from src.db.request_attempts import DB_RequestAttempt
 from src.utils.time import get_now
 
 
-class RequestAttemptsService:
+class RequestAttemptRepository:
     async def fetch_request_attempts(
         self,
         session: AsyncSession,

@@ -10,7 +10,7 @@ from src.core.middleware.request_attempts import RequestAttemptsMiddleware
 from src.core.middleware.throttling import ThrottlingMiddleware
 from src.core.settings import settings
 from src.db import get_session
-from src.services.tasks import TaskService
+from src.repositories.tasks import TaskRepository
 
 # TODO
 # ? Backups
@@ -43,5 +43,5 @@ app.include_router(api_router)
 @crons.cron("0 0 * * *")
 async def delete_expired_tasks():
     async for session in get_session():
-        task_service = TaskService()
+        task_service = TaskRepository()
         await task_service.delete_expired_tasks(session=session)

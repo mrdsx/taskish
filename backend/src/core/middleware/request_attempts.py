@@ -3,9 +3,9 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from src.db import get_session
-from src.services.request_attempts import RequestAttemptsService
+from src.repositories.request_attempts import RequestAttemptRepository
 
-request_attempts_service = RequestAttemptsService()
+request_attempt_repository = RequestAttemptRepository()
 
 
 class RequestAttemptsMiddleware(BaseHTTPMiddleware):
@@ -19,7 +19,7 @@ class RequestAttemptsMiddleware(BaseHTTPMiddleware):
         bg_tasks = BackgroundTasks()
         async for session in get_session():
             bg_tasks.add_task(
-                request_attempts_service.upsert_request_attempt,
+                request_attempt_repository.upsert_request_attempt,
                 host=request.client.host,
                 session=session,
             )

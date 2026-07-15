@@ -9,7 +9,7 @@ from src.schemas.tasks import PartialTaskIn, TaskIn
 from src.utils.time import get_now
 
 
-class TaskService:
+class TaskRepository:
     async def fetch_tasks(
         self, session: AsyncSession, deleted: bool = False
     ) -> Sequence[DB_Task]:
