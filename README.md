@@ -2,11 +2,12 @@
 
 ## About
 
-Taskish is a platform for managing tasks via multiple user-friendly clients.
+Taskish is a single-user platform for managing tasks.
 
 ## Required infra
 
-- Backend (24/7 hosting)
+- Frontend (Vercel is suitable)
+- Backend (persistent hosting for cron-jobs)
 - PostgreSQL
 
 ## Roadmap
@@ -15,5 +16,6 @@ Taskish is a platform for managing tasks via multiple user-friendly clients.
 - [x] Develop CLI
 - [x] Polish backend
 - [x] Polish CLI
-- [ ] Make it to production
-- [ ] Develop web app
+- [x] Make it to production
+- [x] Develop web app
+- [ ] Move from CSR to PWA
