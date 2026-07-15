@@ -11,5 +11,4 @@ class DB_RequestAttempt(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     host: Mapped[str] = mapped_column(String, unique=True)
-    attempts: Mapped[int]
     last_attempt: Mapped[datetime] = mapped_column(DateTime(timezone=True))

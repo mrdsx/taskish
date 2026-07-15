@@ -26,12 +26,10 @@ class RequestAttemptRepository:
         if db_attempt is None:
             new_db_attempt = DB_RequestAttempt(
                 host=host,
-                attempts=1,
                 last_attempt=get_now(),
             )
             session.add(new_db_attempt)
             await session.commit()
         else:
-            db_attempt.attempts += 1
             db_attempt.last_attempt = get_now()
             await session.commit()

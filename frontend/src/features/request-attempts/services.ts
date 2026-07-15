@@ -1,4 +1,3 @@
-import z from "zod";
 import { fetchApi } from "@/lib/api";
 import {
   buildErrorResult,
@@ -6,6 +5,7 @@ import {
   getErrorCode,
   type Result,
 } from "@/lib/result";
+import z from "zod";
 import { requestAttemptSchema } from "./schemas";
 import type { RequestAttempt } from "./types";
 
