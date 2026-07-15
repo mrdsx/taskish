@@ -1,11 +1,11 @@
 {
   "code_actions_on_format": {
     "source.organizeImports": true,
-    "source.fixAll.biome": true,
+    "source.fixAll.biome": true
   },
   "languages": {
     "CSS": {
-      "tab_size": 2,
-    },
-  },
+      "tab_size": 2
+    }
+  }
 }
