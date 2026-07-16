@@ -12,7 +12,9 @@ from src.utils.time import get_now
 class AuthSessionRepository:
     async def fetch_sessions(self, session: AsyncSession) -> Sequence[DB_AuthSession]:
         result = await session.execute(
-            select(DB_AuthSession).order_by(DB_AuthSession.id)
+            select(DB_AuthSession)
+            .where(DB_AuthSession.expires_at > get_now())
+            .order_by(DB_AuthSession.id)
         )
 
         return result.scalars().all()  # pyright: ignore[reportReturnType]
@@ -25,6 +27,7 @@ class AuthSessionRepository:
             select(DB_AuthSession).where(
                 DB_AuthSession.hash == hashed_token,
                 DB_AuthSession.ip_address == ip,
+                DB_AuthSession.expires_at > get_now(),
             )
         )
 
