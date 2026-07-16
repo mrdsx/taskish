@@ -50,7 +50,7 @@ export function RecentRequestAttemptsDialog() {
       <DialogContent showCloseButton>
         <DialogHeader>
           <DialogTitle class="flex items-center gap-2">
-            Recent request attempts{" "}
+            Recent logins{" "}
             <RefreshButton
               size="icon-sm"
               isRefreshing={requestAttemptsQuery.isRefetching}
