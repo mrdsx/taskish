@@ -7,10 +7,10 @@ from src.api import api_router
 from src.core.lifespan import lifespan
 from src.core.middleware.auth import AuthMiddleware
 from src.core.middleware.rate_limiting import RateLimitingMiddleware
-from src.core.middleware.request_attempts import RequestAttemptsMiddleware
 from src.core.middleware.throttling import ThrottlingMiddleware
 from src.core.settings import settings
 from src.db import get_session
+from src.repositories.auth import AuthSessionRepository
 from src.repositories.tasks import TaskRepository
 
 app = FastAPI(lifespan=lifespan)
@@ -25,7 +25,6 @@ def read_root():
 
 
 # Last middleware added - first to be executed
-app.add_middleware(RequestAttemptsMiddleware)
 app.add_middleware(AuthMiddleware)
 app.add_middleware(RateLimitingMiddleware)
 app.add_middleware(ThrottlingMiddleware)
@@ -45,3 +44,11 @@ async def delete_expired_tasks():
     async for session in get_session():
         task_service = TaskRepository()
         await task_service.delete_expired_tasks(session=session)
+
+
+# every day at midnight
+@crons.cron("0 0 * * *")
+async def deleted_expired_auth_sessions():
+    async for session in get_session():
+        auth_session_repository = AuthSessionRepository()
+        await auth_session_repository.delete_expired_sessions(session=session)

@@ -18,8 +18,9 @@ class TaskRepository:
             select(DB_Task).where(where_clause).order_by(DB_Task.id)
         )
 
-        return result.scalars().all()
+        return result.scalars().all()  # pyright: ignore[reportReturnType]
 
+    # TODO: move throwing an error to service layer
     async def fetch_task_by_id(
         self, id: int, session: AsyncSession, deleted: bool = False
     ) -> DB_Task:

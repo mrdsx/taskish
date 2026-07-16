@@ -8,12 +8,13 @@ class Settings(BaseSettings):
     app_env: Literal["prod", "dev"] = "dev"
     throttling_delay_seconds: float = 0
 
-    auth_token: str
-    frontend_url: str = "http://localhost:3000"
+    password: str
+    session_token_cookie: str = "session-token"
+    expiring_auth_session_days: int = 2
+    auth_session_expiration_time_days: int = 7
 
-    @property
-    def ip_api_url(self) -> str:
-        return "http://ip-api.com"
+    frontend_url: str = "http://localhost:3000"
+    ip_api_url: str = "http://ip-api.com"
 
     @property
     def allowed_origins(self) -> list[str]:
@@ -35,4 +36,4 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 
 
-settings = Settings()
+settings = Settings()  # pyright: ignore[reportCallIssue]
