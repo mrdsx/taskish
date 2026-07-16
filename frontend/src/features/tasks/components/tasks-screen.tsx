@@ -1,6 +1,6 @@
 import { createQuery } from "@tanstack/solid-query";
 import { TrashIcon } from "lucide-solid";
-import { createEffect, Match, Switch } from "solid-js";
+import { Match, Switch } from "solid-js";
 import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
@@ -25,6 +25,9 @@ export function TasksScreen() {
     queryFn: async (): Promise<Task[]> => {
       const result = await taskService.getAll();
       if (!result.success) {
+        if (result.errorCode === "auth_error") {
+          resetUserStore();
+        }
         toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to fetch tasks");
       }
@@ -34,12 +37,6 @@ export function TasksScreen() {
     networkMode: "offlineFirst",
     gcTime: 1000 * 60 * 60 * 24,
   }));
-
-  createEffect(() => {
-    if (tasksQuery.isError) {
-      resetUserStore();
-    }
-  });
 
   return (
     <main class="flex justify-center">
