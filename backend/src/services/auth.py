@@ -87,13 +87,13 @@ class AuthSessionService:
 
     async def create_session(
         self,
-        auth_token: str,
+        password: str,
         ip: str,
         auth_session_repository: AuthSessionRepository,
         hasher: PasswordHasher,
         session: AsyncSession,
     ) -> str:
-        hasher.verify(hash=settings.password, password=auth_token)
+        hasher.verify(hash=settings.password, password=password)
 
         session_token = get_random_hash()
         await auth_session_repository.create_session(

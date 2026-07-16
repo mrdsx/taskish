@@ -50,9 +50,9 @@ async def login(
     credentials: Annotated[HTTPAuthorizationCredentials, Depends(security_scheme)],
 ) -> Response:
     try:
-        auth_token = credentials.credentials
+        password = credentials.credentials
         session_token = await auth_session_service.create_session(
-            auth_token=auth_token,
+            password=password,
             ip=ip,
             auth_session_repository=auth_session_repository,
             hasher=hasher,
