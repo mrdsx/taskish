@@ -14,19 +14,19 @@ import {
 } from "@/components/ui/dialog";
 import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../query-keys";
-import { requestAttemptsService } from "../services";
+import { authService } from "../services";
 
-export function RecentRequestAttemptsDialog() {
+export function AuthSessionsDialog() {
   const [wasOpenedForFirstTime, setWasOpenedForFirstTime] =
     createSignal<boolean>(false);
 
-  const requestAttemptsQuery = createQuery(() => ({
-    queryKey: queryKeys.ipList,
+  const authSessionsQuery = createQuery(() => ({
+    queryKey: queryKeys.authSessions,
     queryFn: async () => {
-      const result = await requestAttemptsService.getAll();
+      const result = await authService.getAuthSessions();
       if (!result.success) {
         toast.error(getErrorMessage(result.errorCode));
-        throw new Error("Failed to fetch the request attempts");
+        throw new Error("Failed to fetch the auth sessions");
       }
 
       return result.data;
@@ -34,11 +34,11 @@ export function RecentRequestAttemptsDialog() {
     enabled: wasOpenedForFirstTime(),
   }));
 
-  const sortedRequestAttempts = () =>
-    requestAttemptsQuery.data.toSorted((attemptA, attemptB) => {
+  const sortedAuthSessions = () =>
+    authSessionsQuery.data.toSorted((sessionA, sessionB) => {
       return (
-        new Date(attemptB.lastAttempt).getTime() -
-        new Date(attemptA.lastAttempt).getTime()
+        new Date(sessionB.lastLogin).getTime() -
+        new Date(sessionA.lastLogin).getTime()
       );
     });
 
@@ -50,41 +50,42 @@ export function RecentRequestAttemptsDialog() {
       <DialogContent showCloseButton>
         <DialogHeader>
           <DialogTitle class="flex items-center gap-2">
-            Recent logins{" "}
+            Recent auth sessions{" "}
             <RefreshButton
               size="icon-sm"
-              isRefreshing={requestAttemptsQuery.isRefetching}
+              isRefreshing={authSessionsQuery.isRefetching}
               onlyIcon
-              refresh={requestAttemptsQuery.refetch}
+              refresh={authSessionsQuery.refetch}
             />
           </DialogTitle>
         </DialogHeader>
         <Switch>
-          <Match when={requestAttemptsQuery.isError}>
-            <EmptyErrorView retry={requestAttemptsQuery.refetch} />
+          <Match when={authSessionsQuery.isError}>
+            <EmptyErrorView retry={authSessionsQuery.refetch} />
           </Match>
-          <Match when={requestAttemptsQuery.isPending}>
+          <Match when={authSessionsQuery.isPending}>
             <LoaderCircle class="animate-spin justify-self-center my-2" />
           </Match>
-          <Match when={requestAttemptsQuery.isSuccess}>
+          <Match when={authSessionsQuery.isSuccess}>
             <ul class="max-h-80 space-y-4 overflow-auto">
               <For
-                each={sortedRequestAttempts()}
+                each={sortedAuthSessions()}
                 fallback={<div>No logins found</div>}
               >
-                {(requestAttempt, index) => (
+                {(authSession, index) => (
                   <li>
                     <p>
                       <span class="font-semibold">{index() + 1}.</span>{" "}
-                      {requestAttempt.host} - {requestAttempt.location}
+                      {authSession.host} - {authSession.location}
                     </p>
                     <p class="text-sm text-muted-foreground">
                       Last request:{" "}
-                      {new Date(requestAttempt.lastAttempt).toLocaleString()}
+                      {new Date(authSession.lastLogin).toLocaleString()} (
+                      {authSession.expiresAt})
                     </p>
                     <img
                       class="mt-2"
-                      src={requestAttempt.flagUrl}
+                      src={authSession.flagUrl}
                       alt=""
                       width={50}
                     />

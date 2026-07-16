@@ -16,7 +16,7 @@ export function LogOutButton() {
         throw new Error("Failed to log out");
       }
     },
-    onSuccess: () => {
+    onMutate: () => {
       setIsAuthenticated(false);
     },
   }));

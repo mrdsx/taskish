@@ -1,3 +1,3 @@
 export const queryKeys = {
-  ipList: ["ip-list"],
+  authSessions: ["auth-sessions"],
 } as const satisfies Record<string, readonly string[]>;
