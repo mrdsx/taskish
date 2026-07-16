@@ -70,7 +70,7 @@ async def login(
         value=session_token,
         secure=True,
         httponly=True,
-        samesite="lax",
+        samesite="none",
         max_age=int(cookie_max_age),
     )
 
