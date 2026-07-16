@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
-import { AuthForm } from "@/components/auth-form";
 import { Header } from "@/components/header";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthForm } from "@/features/auth";
 import { isDisplayingTrash, TasksScreen, TrashScreen } from "@/features/tasks";
 import { useUserStore } from "@/stores/user";
 

@@ -1,17 +1,11 @@
-import { useUserStore } from "@/stores/user";
+import { API_URL } from "./constants";
 
 export async function fetchApi(
   path: `/${string}`,
   init?: RequestInit,
 ): Promise<Response> {
-  const apiUrl = useUserStore.getState().apiUrl;
-  const authToken = useUserStore.getState().authToken;
-
-  return await fetch(`${apiUrl}/api${path}`, {
+  return await fetch(`${API_URL}/api${path}`, {
+    credentials: "include",
     ...init,
-    headers: {
-      "auth-token": authToken,
-      ...init?.headers,
-    },
   });
 }

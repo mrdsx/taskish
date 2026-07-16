@@ -19,14 +19,14 @@ import { LoadingTasksView } from "./loading-tasks-view";
 import { SearchBar } from "./search-bar";
 
 export function TasksScreen() {
-  const resetUserStore = useUserStore((state) => state.reset);
+  const setIsAuthenticated = useUserStore((state) => state.setIsAuthenticated);
   const tasksQuery = createQuery(() => ({
     queryKey: queryKeys.tasks,
     queryFn: async (): Promise<Task[]> => {
       const result = await taskService.getAll();
       if (!result.success) {
         if (result.errorCode === "auth_error") {
-          resetUserStore();
+          setIsAuthenticated(false);
         }
         toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to fetch tasks");
