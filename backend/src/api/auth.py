@@ -100,6 +100,11 @@ async def logout(
         auth_session=db_auth_session, session=session
     )
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
-    response.delete_cookie(settings.session_token_cookie)
+    response.delete_cookie(
+        settings.session_token_cookie,
+        secure=True,
+        httponly=True,
+        samesite="none",
+    )
 
     return response
