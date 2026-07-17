@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi_crons import Crons
+from starlette.responses import FileResponse
 
 from src.api import api_router
 from src.core.lifespan import lifespan
@@ -16,13 +17,6 @@ from src.repositories.tasks import TaskRepository
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 
-crons = Crons(app)
-
-
-@app.get("/")
-def read_root():
-    return {"status": "ok"}
-
 
 # Last middleware added - first to be executed
 app.add_middleware(AuthMiddleware)
@@ -36,6 +30,16 @@ app.add_middleware(
     allow_methods=["*"],
 )
 app.include_router(api_router)
+
+
+@app.get("/")
+def read_root():
+    if settings.app_env == "prod":
+        return FileResponse(path="static/frontend/index.html")
+    return {"status": "ok"}
+
+
+crons = Crons(app)
 
 
 # every day at midnight

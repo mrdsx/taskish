@@ -17,3 +17,6 @@ cron_state.*
 # OS-generated
 .DS_Store
 Thumbs.db
+
+# Frontend files
+static/frontend/

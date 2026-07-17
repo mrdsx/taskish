@@ -28,7 +28,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if (
             path is not None
             and isinstance(path, str)
-            and path.startswith(("/static", "/api/auth/login", "/api/auth/logout"))
+            and (not path.startswith("/api") or path.startswith("/api/auth/login"))
         ):
             return await call_next(request)
 

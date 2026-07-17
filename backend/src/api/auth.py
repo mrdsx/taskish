@@ -70,7 +70,7 @@ async def login(
         value=session_token,
         secure=True,
         httponly=True,
-        samesite="none",
+        samesite="strict",
         max_age=int(cookie_max_age),
     )
 
@@ -104,7 +104,7 @@ async def logout(
         settings.session_token_cookie,
         secure=True,
         httponly=True,
-        samesite="none",
+        samesite="strict",
     )
 
     return response

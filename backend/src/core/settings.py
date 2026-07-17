@@ -13,12 +13,13 @@ class Settings(BaseSettings):
     expiring_auth_session_days: int = 2
     auth_session_expiration_time_days: int = 7
 
-    frontend_url: str = "http://localhost:3000"
     ip_api_url: str = "http://ip-api.com"
 
     @property
     def allowed_origins(self) -> list[str]:
-        return [self.frontend_url]
+        if self.app_env == "prod":
+            return []
+        return ["http://localhost:3000"]
 
     @property
     def static_dir(self) -> Path:
