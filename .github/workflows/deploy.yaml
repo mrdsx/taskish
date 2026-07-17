@@ -1,0 +1,39 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build frontend
+        run: |
+          bun install --production --frozen-lockfile
+          bun run build
+        working-directory: frontend
+        env:
+          NODE_ENV: production
+
+      - name: Move frontend /dist to backend /static
+        run: mv frontend/dist backend/static/frontend
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v8
+
+      - name: Deploy to FastAPI Cloud
+        run: uv run fastapi deploy
+        working-directory: backend
+        env:
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_APP_ID }}
