@@ -7,6 +7,9 @@ export default defineConfig({
   plugins: [solid(), tailwindcss()],
   server: {
     port: 3000,
+    proxy: {
+      "/api": "http://localhost:8000",
+    },
   },
   base: process.env.NODE_ENV === "production" ? "/static/frontend/" : "/",
   resolve: {
