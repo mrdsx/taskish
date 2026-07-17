@@ -20,13 +20,12 @@ class AuthSessionRepository:
         return result.scalars().all()  # pyright: ignore[reportReturnType]
 
     async def fetch_session(
-        self, session_token: str, ip: str, session: AsyncSession
+        self, session_token: str, session: AsyncSession
     ) -> DB_AuthSession | None:
         hashed_token = get_hash(session_token)
         result = await session.execute(
             select(DB_AuthSession).where(
                 DB_AuthSession.hash == hashed_token,
-                DB_AuthSession.ip_address == ip,
                 DB_AuthSession.expires_at > get_now(),
             )
         )

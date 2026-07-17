@@ -92,7 +92,7 @@ async def logout(
         return auth_service.handle_failed_auth(ip)
 
     db_auth_session = await auth_session_repository.fetch_session(
-        session_token=session_token, ip=ip, session=session
+        session_token=session_token, session=session
     )
     if db_auth_session is None:
         return auth_service.handle_failed_auth(ip)
