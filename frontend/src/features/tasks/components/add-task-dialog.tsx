@@ -31,9 +31,9 @@ export function AddTaskDialog() {
       return result.data;
     },
     onSuccess: (newTask) => {
-      const tasks = queryClient.getQueryData(queryKeys.tasks) as Task[];
-      const newTasks = [...tasks, newTask];
-      queryClient.setQueryData(queryKeys.tasks, newTasks);
+      queryClient.setQueryData(queryKeys.tasks, (tasks: Task[]): Task[] => {
+        return [...tasks, newTask];
+      });
       setIsOpen(false);
     },
   }));

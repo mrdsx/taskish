@@ -20,16 +20,22 @@ export function TaskItem(props: { task: Task }) {
       }
     },
     onSuccess: () => {
-      const tasks = queryClient.getQueryData(queryKeys.tasks) as Task[];
-      const newTasks = tasks.filter((task) => task.id !== props.task.id);
-      queryClient.setQueryData(queryKeys.tasks, newTasks);
+      queryClient.setQueryData(queryKeys.tasks, (tasks: Task[]): Task[] => {
+        return tasks.filter((task) => task.id !== props.task.id);
+      });
 
-      const trash = queryClient.getQueryData(queryKeys.trash) as DeletedTask[];
-      const newTrash: DeletedTask[] = [
-        ...trash,
-        { ...props.task, expiresAt: DEFAULT_EXPIRATION_TIME },
-      ].toSorted((taskA, taskB) => taskA.id - taskB.id);
-      queryClient.setQueryData(queryKeys.trash, newTrash);
+      queryClient.setQueryData(
+        queryKeys.trash,
+        (trash: DeletedTask[]): DeletedTask[] => {
+          const newDeletedTask: DeletedTask = {
+            ...props.task,
+            expiresAt: DEFAULT_EXPIRATION_TIME,
+          };
+          return [...trash, newDeletedTask].toSorted(
+            (taskA, taskB) => taskA.id - taskB.id,
+          );
+        },
+      );
     },
   }));
 

@@ -29,15 +29,18 @@ export function DeletedTaskItem(props: { task: DeletedTask }) {
       return task;
     },
     onSuccess: (restoredTask) => {
-      const tasks = queryClient.getQueryData(queryKeys.tasks) as Task[];
-      const newTasks = [...tasks, restoredTask].toSorted(
-        (taskA, taskB) => taskA.id - taskB.id,
-      );
-      queryClient.setQueryData(queryKeys.tasks, newTasks);
+      queryClient.setQueryData(queryKeys.tasks, (tasks: Task[]): Task[] => {
+        return [...tasks, restoredTask].toSorted(
+          (taskA, taskB) => taskA.id - taskB.id,
+        );
+      });
 
-      const trash = queryClient.getQueryData(queryKeys.trash) as DeletedTask[];
-      const newTrash = trash.filter((task) => task.id !== restoredTask.id);
-      queryClient.setQueryData(queryKeys.trash, newTrash);
+      queryClient.setQueryData(
+        queryKeys.trash,
+        (trash: DeletedTask[]): DeletedTask[] => {
+          return trash.filter((task) => task.id !== restoredTask.id);
+        },
+      );
     },
   }));
 

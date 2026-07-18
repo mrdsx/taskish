@@ -31,14 +31,14 @@ export function UpdateTaskDialog(props: { task: Task }) {
       return result.data;
     },
     onSuccess: (newTask) => {
-      const tasks = queryClient.getQueryData(queryKeys.tasks) as Task[];
-      const newTasks = tasks.map((task) => {
-        if (task.id === newTask.id) {
-          return newTask;
-        }
-        return task;
+      queryClient.setQueryData(queryKeys.tasks, (tasks: Task[]): Task[] => {
+        return tasks.map((task) => {
+          if (task.id === newTask.id) {
+            return newTask;
+          }
+          return task;
+        });
       });
-      queryClient.setQueryData(queryKeys.tasks, newTasks);
       setIsOpen(false);
     },
   }));
