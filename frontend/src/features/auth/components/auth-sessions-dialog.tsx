@@ -15,6 +15,7 @@ import {
 import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../query-keys";
 import { authService } from "../services";
+import { AuthSessionItemView } from "./auth-session-item-view";
 
 export function AuthSessionsDialog() {
   const [wasOpenedForFirstTime, setWasOpenedForFirstTime] =
@@ -74,20 +75,9 @@ export function AuthSessionsDialog() {
               >
                 {(authSession, index) => (
                   <li>
-                    <p>
-                      <span class="font-semibold">{index() + 1}.</span>{" "}
-                      {authSession.host} - {authSession.location}
-                    </p>
-                    <p class="text-sm text-muted-foreground">
-                      Last request:{" "}
-                      {new Date(authSession.lastLogin).toLocaleString()} (
-                      {authSession.expiresAt})
-                    </p>
-                    <img
-                      class="mt-2"
-                      src={authSession.flagUrl}
-                      alt=""
-                      width={50}
+                    <AuthSessionItemView
+                      authSession={authSession}
+                      index={index()}
                     />
                   </li>
                 )}
