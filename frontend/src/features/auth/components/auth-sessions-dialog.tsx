@@ -73,12 +73,9 @@ export function AuthSessionsDialog() {
                 each={sortedAuthSessions()}
                 fallback={<div>No logins found</div>}
               >
-                {(authSession, index) => (
+                {(authSession) => (
                   <li>
-                    <AuthSessionItemView
-                      authSession={authSession}
-                      index={index()}
-                    />
+                    <AuthSessionItemView authSession={authSession} />
                   </li>
                 )}
               </For>

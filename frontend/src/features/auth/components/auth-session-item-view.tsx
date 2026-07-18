@@ -1,22 +1,18 @@
 import type { AuthSession } from "../types";
 
-export function AuthSessionItemView(props: {
-  authSession: AuthSession;
-  index: number;
-}) {
+export function AuthSessionItemView(props: { authSession: AuthSession }) {
   const authSession = props.authSession;
 
   return (
-    <>
+    <div class="bg-neutral-100 dark:bg-card rounded-lg p-2 border">
       <p>
-        <span class="font-semibold">{props.index + 1}.</span> {authSession.host}{" "}
-        - {authSession.location}
+        {authSession.host} - {authSession.location}
       </p>
       <p class="text-sm text-muted-foreground">
         Last request: {new Date(authSession.lastLogin).toLocaleString()} (
         {authSession.expiresAt})
       </p>
-      <img class="mt-2" src={authSession.flagUrl} alt="" width={50} />
-    </>
+      <img class="mt-2 rounded" src={authSession.flagUrl} alt="" width={55} />
+    </div>
   );
 }
