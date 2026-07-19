@@ -4,11 +4,11 @@ export function AuthSessionItemView(props: { authSession: AuthSession }) {
   const authSession = props.authSession;
 
   return (
-    <div class="bg-neutral-100 dark:bg-card rounded-lg p-2 border">
+    <div class="rounded-lg border bg-neutral-100 p-2 dark:bg-card">
       <p>
         {authSession.host} - {authSession.location}
       </p>
-      <p class="text-sm text-muted-foreground">
+      <p class="text-muted-foreground text-sm">
         Last request: {new Date(authSession.lastLogin).toLocaleString()} (
         {authSession.expiresAt})
       </p>

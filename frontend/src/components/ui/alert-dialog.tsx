@@ -35,7 +35,7 @@ export function AlertDialogOverlay<T extends ValidComponent = "div">(
     <AlertDialogPrimitive.Overlay
       data-slot="alert-dialog-overlay"
       class={cx(
-        "data-expanded:animate-in data-closed:animate-out data-closed:fade-out-0 data-expanded:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        "data-closed:fade-out-0 data-expanded:fade-in-0 fixed inset-0 z-50 bg-black/50 data-closed:animate-out data-expanded:animate-in",
         props.class,
       )}
       {...rest}
@@ -57,7 +57,7 @@ export function AlertDialogContent<T extends ValidComponent = "div">(
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         class={cx(
-          "bg-background data-expanded:animate-in data-closed:animate-out data-closed:fade-out-0 data-expanded:fade-in-0 data-closed:zoom-out-95 data-expanded:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+          "data-closed:fade-out-0 data-expanded:fade-in-0 data-closed:zoom-out-95 data-expanded:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-background p-6 shadow-lg duration-200 data-closed:animate-out data-expanded:animate-in sm:max-w-lg",
           props.class,
         )}
         {...rest}
@@ -108,7 +108,7 @@ export function AlertDialogTitle<T extends ValidComponent = "h2">(
   return (
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
-      class={cx("text-lg font-semibold", props.class)}
+      class={cx("font-semibold text-lg", props.class)}
       {...rest}
     />
   );

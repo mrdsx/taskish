@@ -50,7 +50,7 @@ export function TasksScreen() {
             <LoadingTasksView />
           </Match>
           <Match when={tasksQuery.isSuccess}>
-            <div class="flex flex-wrap gap-2 justify-between">
+            <div class="flex flex-wrap justify-between gap-2">
               <div class="flex flex-wrap gap-2">
                 <AddTaskDialog />
                 <RefreshButton

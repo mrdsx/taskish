@@ -65,7 +65,7 @@ export function AuthSessionsDialog() {
             <EmptyErrorView retry={authSessionsQuery.refetch} />
           </Match>
           <Match when={authSessionsQuery.isPending}>
-            <LoaderCircle class="animate-spin justify-self-center my-2" />
+            <LoaderCircle class="my-2 animate-spin justify-self-center" />
           </Match>
           <Match when={authSessionsQuery.isSuccess}>
             <ul class="max-h-80 space-y-4 overflow-auto">
