@@ -10,5 +10,5 @@ cd ../
 # backend
 mv frontend/dist backend/static/frontend
 cd backend
-uv run fastapi dev --host 0.0.0.0
+uv run fastapi run --host 0.0.0.0
 cd ../
