@@ -39,41 +39,39 @@ export function TasksScreen() {
   }));
 
   return (
-    <main class="flex justify-center">
-      <div class="mx-4 mt-20 w-full max-w-120 space-y-2">
-        <SearchBar disabled={tasksQuery.isPending} />
-        <Switch>
-          <Match when={tasksQuery.isError}>
-            <EmptyErrorView retry={tasksQuery.refetch} />
-          </Match>
-          <Match when={tasksQuery.isPending}>
-            <LoadingTasksView />
-          </Match>
-          <Match when={tasksQuery.isSuccess}>
-            <div class="flex flex-wrap justify-between gap-2">
-              <div class="flex flex-wrap gap-2">
-                <AddTaskDialog />
-                <RefreshButton
-                  isRefreshing={tasksQuery.isRefetching}
-                  refresh={tasksQuery.refetch}
-                />
-                <ExportTasksButton />
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => setIsDisplayingTrash(true)}
-              >
-                <TrashIcon />
-                Trash
-              </Button>
+    <>
+      <SearchBar disabled={tasksQuery.isPending} />
+      <Switch>
+        <Match when={tasksQuery.isError}>
+          <EmptyErrorView retry={tasksQuery.refetch} />
+        </Match>
+        <Match when={tasksQuery.isPending}>
+          <LoadingTasksView />
+        </Match>
+        <Match when={tasksQuery.isSuccess}>
+          <div class="flex flex-wrap justify-between gap-2">
+            <div class="flex flex-wrap gap-2">
+              <AddTaskDialog />
+              <RefreshButton
+                isRefreshing={tasksQuery.isRefetching}
+                refresh={tasksQuery.refetch}
+              />
+              <ExportTasksButton />
             </div>
-            <FilteredTasksView
-              tasks={tasksQuery.data}
-              searchQuery={searchQuery()}
-            />
-          </Match>
-        </Switch>
-      </div>
-    </main>
+            <Button
+              variant="outline"
+              onClick={() => setIsDisplayingTrash(true)}
+            >
+              <TrashIcon />
+              Trash
+            </Button>
+          </div>
+          <FilteredTasksView
+            tasks={tasksQuery.data}
+            searchQuery={searchQuery()}
+          />
+        </Match>
+      </Switch>
+    </>
   );
 }

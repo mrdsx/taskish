@@ -21,7 +21,7 @@ export function FilteredDeletedTasksView(props: {
       </Show>
 
       <Show when={filteredTasks().length > 0}>
-        <ul class="max-h-100 space-y-2 overflow-y-auto">
+        <ul class="space-y-2 overflow-y-auto">
           <For each={filteredTasks()}>
             {(task) => (
               <li>

@@ -9,22 +9,24 @@ export function App() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
 
   return (
-    <>
+    <div class="flex h-screen flex-col">
       <Header />
-      <Show when={isAuthenticated()}>
-        <Show when={isDisplayingTrash()}>
-          <TrashScreen />
+      <main class="mx-auto flex min-h-0 w-full max-w-150 flex-col gap-2 pt-20 pb-4">
+        <Show when={isAuthenticated()}>
+          <Show when={isDisplayingTrash()}>
+            <TrashScreen />
+          </Show>
+          <Show when={!isDisplayingTrash()}>
+            <TasksScreen />
+          </Show>
         </Show>
-        <Show when={!isDisplayingTrash()}>
-          <TasksScreen />
+        <Show when={!isAuthenticated()}>
+          <main class="flex justify-center pt-[10vh]">
+            <AuthForm />
+          </main>
         </Show>
-      </Show>
-      <Show when={!isAuthenticated()}>
-        <main class="flex justify-center pt-[10vh]">
-          <AuthForm />
-        </main>
-      </Show>
-      <Toaster richColors />
-    </>
+        <Toaster richColors />
+      </main>
+    </div>
   );
 }
