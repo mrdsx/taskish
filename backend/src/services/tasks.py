@@ -46,8 +46,7 @@ class TaskService:
         id: int,
         task_repository: TaskRepository,
         session: AsyncSession,
-    ) -> DB_Task:
-
+    ) -> None:
         db_task = await task_repository.delete_by_id(id=id, session=session)
         if db_task is None:
             raise HTTPException(
@@ -55,20 +54,15 @@ class TaskService:
                 detail="Task not found",
             )
 
-        return db_task
-
     async def restore_by_id(
         self,
         id: int,
         task_repository: TaskRepository,
         session: AsyncSession,
-    ) -> DB_Task:
-
+    ) -> None:
         db_task = await task_repository.restore_by_id(id=id, session=session)
         if db_task is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Task not found",
             )
-
-        return db_task
