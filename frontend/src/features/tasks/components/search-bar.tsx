@@ -9,7 +9,7 @@ import { searchQuery, setSearchQuery } from "../stores/search";
 
 export function SearchBar(props: { disabled?: boolean }) {
   return (
-    <InputGroup>
+    <InputGroup class="shrink-0">
       <InputGroupInput
         placeholder="Type your search query..."
         value={searchQuery()}
