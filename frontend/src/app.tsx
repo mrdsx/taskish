@@ -11,7 +11,7 @@ export function App() {
   return (
     <div class="flex h-screen flex-col">
       <Header />
-      <main class="mx-auto px-4 flex min-h-0 w-full max-w-150 flex-col gap-2 pt-20 pb-8">
+      <main class="mx-auto flex min-h-0 w-full max-w-150 flex-col gap-2 px-4 pt-20 pb-8">
         <Show when={isAuthenticated()}>
           <Show when={isDisplayingTrash()}>
             <TrashScreen />
