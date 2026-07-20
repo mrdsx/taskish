@@ -70,13 +70,13 @@ cache = TTLCache(maxsize=100, ttl=60 * 60 * 24)
 
 
 class AuthSessionService:
-    async def get_sessions(
+    async def get_all(
         self,
         auth_session_repository: AuthSessionRepository,
         session: AsyncSession,
         request: Request,
     ):
-        db_auth_sessions = await auth_session_repository.fetch_sessions(session=session)
+        db_auth_sessions = await auth_session_repository.fetch_all(session=session)
         hosts = [auth_session.ip_address for auth_session in db_auth_sessions]
         geolocations = await self._fetch_geolocations(ip_list=hosts)
         ip_dict = self._get_ip_dict(geolocations=geolocations, request=request)
@@ -85,7 +85,7 @@ class AuthSessionService:
             auth_sessions=db_auth_sessions, ip_dict=ip_dict, request=request
         )
 
-    async def create_session(
+    async def create(
         self,
         password: str,
         ip: str,
@@ -96,7 +96,7 @@ class AuthSessionService:
         hasher.verify(hash=settings.password, password=password)
 
         session_token = get_random_hash()
-        await auth_session_repository.create_session(
+        await auth_session_repository.create(
             session_token=session_token,
             ip=ip,
             session=session,

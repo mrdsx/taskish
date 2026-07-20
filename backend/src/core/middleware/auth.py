@@ -40,7 +40,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         async for session in get_session():
             now = get_now()
             # TODO: extract to service method
-            db_auth_session = await auth_session_repository.fetch_session(
+            db_auth_session = await auth_session_repository.fetch_by_token(
                 session_token=session_token, session=session
             )
             if db_auth_session is None or db_auth_session.expires_at <= now:

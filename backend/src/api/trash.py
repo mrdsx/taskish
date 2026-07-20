@@ -16,7 +16,7 @@ async def get_tasks_from_trash(
     task_repository: Annotated[TaskRepository, Depends(TaskRepository)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    return await task_repository.fetch_tasks(session=session, deleted=True)
+    return await task_repository.fetch_all(session=session, deleted=True)
 
 
 @router.get("/{task_id}", response_model=DeletedTaskOut)
@@ -26,7 +26,7 @@ async def get_task_by_id(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    return await task_service.get_task_by_id(
+    return await task_service.get_by_id(
         id=task_id,
         deleted=True,
         task_repository=task_repository,
@@ -41,7 +41,7 @@ async def restore_task_by_id(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    await task_service.restore_task_by_id(
+    await task_service.restore_by_id(
         id=task_id, task_repository=task_repository, session=session
     )
 

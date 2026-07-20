@@ -30,7 +30,7 @@ async def get_sessions(
     session: Annotated[AsyncSession, Depends(get_session)],
     request: Request,
 ):
-    return await auth_session_service.get_sessions(
+    return await auth_session_service.get_all(
         auth_session_repository=auth_session_repository,
         session=session,
         request=request,
@@ -51,7 +51,7 @@ async def login(
 ) -> Response:
     try:
         password = credentials.credentials
-        session_token = await auth_session_service.create_session(
+        session_token = await auth_session_service.create(
             password=password,
             ip=ip,
             auth_session_repository=auth_session_repository,
@@ -91,14 +91,12 @@ async def logout(
     if session_token is None:
         return auth_service.handle_failed_auth(ip)
 
-    db_auth_session = await auth_session_repository.fetch_session(
+    db_auth_session = await auth_session_repository.fetch_by_token(
         session_token=session_token, session=session
     )
     if db_auth_session is None:
         return auth_service.handle_failed_auth(ip)
-    await auth_session_repository.delete_session(
-        auth_session=db_auth_session, session=session
-    )
+    await auth_session_repository.delete(auth_session=db_auth_session, session=session)
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
     response.delete_cookie(
         settings.session_token_cookie,

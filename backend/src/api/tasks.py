@@ -16,7 +16,7 @@ async def get_tasks(
     task_repository: Annotated[TaskRepository, Depends(TaskRepository)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    return await task_repository.fetch_tasks(session=session)
+    return await task_repository.fetch_all(session=session)
 
 
 @router.get("/{task_id}", response_model=TaskOut)
@@ -26,7 +26,7 @@ async def get_task_by_id(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    return await task_service.get_task_by_id(
+    return await task_service.get_by_id(
         id=task_id, task_repository=task_repository, session=session
     )
 
@@ -37,7 +37,7 @@ async def create_task(
     task_repository: Annotated[TaskRepository, Depends(TaskRepository)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    return await task_repository.create_task(task=task, session=session)
+    return await task_repository.create(task=task, session=session)
 
 
 @router.patch("/{task_id}", response_model=TaskOut)
@@ -48,7 +48,7 @@ async def update_task_by_id(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ):
-    return await task_service.update_task_by_id(
+    return await task_service.update_by_id(
         id=task_id, task=task, task_repository=task_repository, session=session
     )
 
@@ -60,7 +60,7 @@ async def delete_task_by_id(
     task_service: Annotated[TaskService, Depends(TaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> Response:
-    await task_service.delete_task_by_id(
+    await task_service.delete_by_id(
         id=task_id, task_repository=task_repository, session=session
     )
 

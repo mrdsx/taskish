@@ -47,7 +47,7 @@ crons = Crons(app)
 async def delete_expired_tasks():
     async for session in get_session():
         task_service = TaskRepository()
-        await task_service.delete_expired_tasks(session=session)
+        await task_service.delete_all_expired(session=session)
 
 
 # every day at midnight
@@ -55,4 +55,4 @@ async def delete_expired_tasks():
 async def deleted_expired_auth_sessions():
     async for session in get_session():
         auth_session_repository = AuthSessionRepository()
-        await auth_session_repository.delete_expired_sessions(session=session)
+        await auth_session_repository.delete_all_expired(session=session)

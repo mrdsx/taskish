@@ -11,7 +11,7 @@ from src.utils.time import get_now
 
 
 class AuthSessionRepository:
-    async def fetch_sessions(self, session: AsyncSession) -> Sequence[DB_AuthSession]:
+    async def fetch_all(self, session: AsyncSession) -> Sequence[DB_AuthSession]:
         result = await session.execute(
             select(DB_AuthSession)
             .where(DB_AuthSession.expires_at > get_now())
@@ -20,7 +20,7 @@ class AuthSessionRepository:
 
         return result.scalars().all()
 
-    async def fetch_session(
+    async def fetch_by_token(
         self, session_token: str, session: AsyncSession
     ) -> DB_AuthSession | None:
         hashed_token = get_hash(session_token)
@@ -33,7 +33,7 @@ class AuthSessionRepository:
 
         return result.scalar()
 
-    async def create_session(
+    async def create(
         self, session_token: str, ip: str, session: AsyncSession
     ) -> DB_AuthSession:
         hashed_token = get_hash(session_token)
@@ -50,13 +50,11 @@ class AuthSessionRepository:
 
         return db_auth_session
 
-    async def delete_session(
-        self, auth_session: DB_AuthSession, session: AsyncSession
-    ) -> None:
+    async def delete(self, auth_session: DB_AuthSession, session: AsyncSession) -> None:
         await session.delete(auth_session)
         await session.commit()
 
-    async def delete_expired_sessions(self, session: AsyncSession) -> None:
+    async def delete_all_expired(self, session: AsyncSession) -> None:
         await session.execute(
             delete(DB_AuthSession).where(DB_AuthSession.expires_at <= get_now())
         )

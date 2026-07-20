@@ -18,6 +18,7 @@ class TaskIn(BaseModel):
     title: str = Field(min_length=1, max_length=MAX_TITLE_LENGTH)
     sub_tasks: list[str]
 
+    # TODO: extract duplicating validators
     @field_validator("title", mode="before")
     @classmethod
     def strip_title(cls, title: Any) -> Any:
