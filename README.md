@@ -18,4 +18,8 @@ Taskish is a single-user platform for managing tasks.
 - [x] Polish CLI
 - [x] Make it to production
 - [x] Develop web app
-- [ ] Move from CSR to PWA
+- [x] Move from CSR to PWA
+
+## Aditional notes
+
+CLI client is no longer maintained because I found it not necessary in my daily workflow.
