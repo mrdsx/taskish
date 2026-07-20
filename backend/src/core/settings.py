@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -27,6 +27,17 @@ class Settings(BaseSettings):
 
     db_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/database"
     db_ssl_mode: Literal["require"] | None = None
+
+    @property
+    def db_settings(self) -> dict[str, Any]:
+        return {
+            "url": self.db_url,
+            "connect_args": {"ssl": self.db_ssl_mode == "require"},
+            "pool_size": 1,
+            "max_overflow": 0,
+            "pool_recycle": 240,
+            "pool_pre_ping": True,
+        }
 
     # rate limiting configuration
     max_successful_attempts: int
