@@ -1,6 +1,7 @@
 from datetime import timedelta
+from typing import Sequence
 
-from sqlalchemy import Sequence, delete, select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.settings import settings
@@ -17,7 +18,7 @@ class AuthSessionRepository:
             .order_by(DB_AuthSession.id)
         )
 
-        return result.scalars().all()  # pyright: ignore[reportReturnType]
+        return result.scalars().all()
 
     async def fetch_session(
         self, session_token: str, session: AsyncSession

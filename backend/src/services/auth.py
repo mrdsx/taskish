@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Sequence
 
 import httpx
 from argon2 import PasswordHasher
 from cachetools import TTLCache
 from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
-from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.core.rate_limiting import (
@@ -77,7 +77,7 @@ class AuthSessionService:
         request: Request,
     ):
         db_auth_sessions = await auth_session_repository.fetch_sessions(session=session)
-        hosts = [auth_session.ip_address for auth_session in db_auth_sessions]  # pyright: ignore[reportGeneralTypeIssues]
+        hosts = [auth_session.ip_address for auth_session in db_auth_sessions]
         geolocations = await self._fetch_geolocations(ip_list=hosts)
         ip_dict = self._get_ip_dict(geolocations=geolocations, request=request)
 

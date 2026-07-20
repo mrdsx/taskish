@@ -1,6 +1,7 @@
 from datetime import timedelta
+from typing import Sequence
 
-from sqlalchemy import ColumnElement, Sequence, delete, select
+from sqlalchemy import ColumnElement, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.tasks import DB_Task
@@ -17,7 +18,7 @@ class TaskRepository:
             select(DB_Task).where(where_clause).order_by(DB_Task.id)
         )
 
-        return result.scalars().all()  # pyright: ignore[reportReturnType]
+        return result.scalars().all()
 
     async def fetch_task_by_id(
         self, id: int, session: AsyncSession, deleted: bool = False
