@@ -20,7 +20,7 @@ class DailyTaskOut(BaseModel):
 class DailyTaskIn(BaseModel):
     title: str = Field(min_length=1, max_length=MAX_TITLE_LENGTH)
     sub_tasks: list[str]
-    completed: bool = False
+    completed: bool
 
     @field_validator("title", mode="before")
     @classmethod

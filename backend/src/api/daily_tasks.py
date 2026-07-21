@@ -52,7 +52,7 @@ async def delete_task_by_id(
     daily_task_repository: Annotated[DailyTaskRepository, Depends(DailyTaskRepository)],
     daily_task_service: Annotated[DailyTaskService, Depends(DailyTaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
-):
+) -> Response:
     await daily_task_service.delete_by_id(
         id=task_id,
         daily_task_repository=daily_task_repository,
