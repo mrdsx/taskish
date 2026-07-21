@@ -14,5 +14,7 @@ class DB_Task(Base):
     title: Mapped[str]
     sub_tasks: Mapped[list[str]] = mapped_column(ARRAY(String))
     expires_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), default=None, nullable=True
+        DateTime(timezone=True),
+        default=None,
+        nullable=True,
     )

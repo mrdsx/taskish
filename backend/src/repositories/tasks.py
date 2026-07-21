@@ -5,30 +5,22 @@ from sqlalchemy import ColumnElement, delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.tasks import DB_Task
-from src.schemas.tasks import PartialTaskIn, TaskIn
+from src.schemas.tasks import TaskIn
 from src.utils.time import get_now
 
 
 class TaskRepository:
     async def fetch_all(
-        self, session: AsyncSession, deleted: bool = False
+        self,
+        session: AsyncSession,
+        deleted: bool = False,
     ) -> Sequence[DB_Task]:
         where_clause = self._get_expiration_clause(deleted=deleted)
         result = await session.execute(
-            select(DB_Task).where(where_clause).order_by(DB_Task.id)
+            select(DB_Task).where(where_clause).order_by(DB_Task.id),
         )
 
         return result.scalars().all()
-
-    async def fetch_by_id(
-        self, id: int, session: AsyncSession, deleted: bool = False
-    ) -> DB_Task | None:
-        where_clause = self._get_expiration_clause(deleted=deleted)
-        result = await session.execute(
-            select(DB_Task).where(DB_Task.id == id, where_clause)
-        )
-
-        return result.scalar()
 
     async def create(self, task: TaskIn, session: AsyncSession) -> DB_Task:
         db_task = DB_Task(**task.model_dump())
@@ -38,21 +30,23 @@ class TaskRepository:
         return db_task
 
     async def update_by_id(
-        self, id: int, task: PartialTaskIn, session: AsyncSession
+        self,
+        id: int,
+        task: TaskIn,
+        session: AsyncSession,
     ) -> DB_Task | None:
-        db_task = await self.fetch_by_id(id=id, session=session)
+        db_task = await self._fetch_by_id(id=id, session=session)
         if db_task is None:
             return None
 
         for key, value in task.model_dump().items():
-            if value is not None:
-                setattr(db_task, key, value)
+            setattr(db_task, key, value)
         await session.commit()
 
         return db_task
 
     async def delete_by_id(self, id: int, session: AsyncSession) -> DB_Task | None:
-        db_task = await self.fetch_by_id(id=id, session=session)
+        db_task = await self._fetch_by_id(id=id, session=session)
         if db_task is None:
             return None
 
@@ -62,7 +56,7 @@ class TaskRepository:
         return db_task
 
     async def restore_by_id(self, id: int, session: AsyncSession) -> DB_Task | None:
-        db_task = await self.fetch_by_id(id=id, session=session, deleted=True)
+        db_task = await self._fetch_by_id(id=id, session=session, deleted=True)
         if db_task is None:
             return None
 
@@ -74,6 +68,19 @@ class TaskRepository:
     async def delete_all_expired(self, session: AsyncSession) -> None:
         await session.execute(delete(DB_Task).where(DB_Task.expires_at <= get_now()))
         await session.commit()
+
+    async def _fetch_by_id(
+        self,
+        id: int,
+        session: AsyncSession,
+        deleted: bool = False,
+    ) -> DB_Task | None:
+        where_clause = self._get_expiration_clause(deleted=deleted)
+        result = await session.execute(
+            select(DB_Task).where(DB_Task.id == id, where_clause),
+        )
+
+        return result.scalar()
 
     def _get_expiration_clause(self, deleted: bool) -> ColumnElement[bool]:
         if deleted:

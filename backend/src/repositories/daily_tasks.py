@@ -9,7 +9,9 @@ from src.schemas.daily_tasks import DailyTaskIn
 
 class DailyTaskRepository:
     async def fetch_all(self, session: AsyncSession) -> Sequence[DB_DailyTask]:
-        result = await session.execute(select(DB_DailyTask))
+        result = await session.execute(
+            select(DB_DailyTask).order_by(DB_DailyTask.id),
+        )
 
         return result.scalars().all()
 
@@ -21,10 +23,13 @@ class DailyTaskRepository:
         return db_task
 
     async def update_by_id(
-        self, id: int, task: DailyTaskIn, session: AsyncSession
+        self,
+        id: int,
+        task: DailyTaskIn,
+        session: AsyncSession,
     ) -> DB_DailyTask | None:
         result = await session.execute(
-            select(DB_DailyTask).where(DB_DailyTask.id == id)
+            select(DB_DailyTask).where(DB_DailyTask.id == id),
         )
         db_task = result.scalar()
         if db_task is None:
@@ -39,7 +44,7 @@ class DailyTaskRepository:
 
     async def delete_by_id(self, id: int, session: AsyncSession) -> DB_DailyTask | None:
         result = await session.execute(
-            select(DB_DailyTask).where(DB_DailyTask.id == id)
+            select(DB_DailyTask).where(DB_DailyTask.id == id),
         )
         db_task = result.scalar()
         if db_task is None:

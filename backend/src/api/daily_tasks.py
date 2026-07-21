@@ -13,31 +13,40 @@ from src.services.daily_tasks import DailyTaskService
 router = APIRouter(prefix="/daily-tasks")
 
 
-@router.get("", response_model=list[DailyTaskOut])
+@router.get("")
 async def get_daily_tasks(
     daily_task_repository: Annotated[DailyTaskRepository, Depends(DailyTaskRepository)],
+    daily_task_service: Annotated[DailyTaskService, Depends(DailyTaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
-):
-    return await daily_task_repository.fetch_all(session=session)
+) -> list[DailyTaskOut]:
+    return await daily_task_service.get_all(
+        daily_task_repository=daily_task_repository,
+        session=session,
+    )
 
 
-@router.post("", response_model=DailyTaskOut)
+@router.post("")
 async def create_daily_task(
     task: DailyTaskIn,
     daily_task_repository: Annotated[DailyTaskRepository, Depends(DailyTaskRepository)],
+    daily_task_service: Annotated[DailyTaskService, Depends(DailyTaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
-):
-    return await daily_task_repository.create(task=task, session=session)
+) -> DailyTaskOut:
+    return await daily_task_service.create(
+        task=task,
+        daily_task_repository=daily_task_repository,
+        session=session,
+    )
 
 
-@router.put("/{task_id}", response_model=DailyTaskOut)
+@router.put("/{task_id}")
 async def update_task_by_id(
     task_id: int,
     task: DailyTaskIn,
     daily_task_repository: Annotated[DailyTaskRepository, Depends(DailyTaskRepository)],
     daily_task_service: Annotated[DailyTaskService, Depends(DailyTaskService)],
     session: Annotated[AsyncSession, Depends(get_session)],
-):
+) -> DailyTaskOut:
     return await daily_task_service.update_by_id(
         id=task_id,
         task=task,

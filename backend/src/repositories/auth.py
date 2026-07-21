@@ -15,27 +15,27 @@ class AuthSessionRepository:
         result = await session.execute(
             select(DB_AuthSession)
             .where(DB_AuthSession.expires_at > get_now())
-            .order_by(DB_AuthSession.id)
+            .order_by(DB_AuthSession.id),
         )
 
         return result.scalars().all()
 
     async def fetch_by_token(
-        self, session_token: str, session: AsyncSession
+        self,
+        session_token: str,
+        session: AsyncSession,
     ) -> DB_AuthSession | None:
         hashed_token = get_hash(session_token)
         result = await session.execute(
             select(DB_AuthSession).where(
                 DB_AuthSession.hash == hashed_token,
                 DB_AuthSession.expires_at > get_now(),
-            )
+            ),
         )
 
         return result.scalar()
 
-    async def create(
-        self, session_token: str, ip: str, session: AsyncSession
-    ) -> DB_AuthSession:
+    async def create(self, session_token: str, ip: str, session: AsyncSession) -> None:
         hashed_token = get_hash(session_token)
         now = get_now()
 
@@ -48,14 +48,12 @@ class AuthSessionRepository:
         session.add(db_auth_session)
         await session.commit()
 
-        return db_auth_session
-
     async def delete(self, auth_session: DB_AuthSession, session: AsyncSession) -> None:
         await session.delete(auth_session)
         await session.commit()
 
     async def delete_all_expired(self, session: AsyncSession) -> None:
         await session.execute(
-            delete(DB_AuthSession).where(DB_AuthSession.expires_at <= get_now())
+            delete(DB_AuthSession).where(DB_AuthSession.expires_at <= get_now()),
         )
         await session.commit()

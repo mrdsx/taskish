@@ -5,6 +5,7 @@ build/
 dist/
 *.egg-info/
 *.py[cod]
+.ruff_cache
 
 # Secrets
 .env

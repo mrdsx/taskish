@@ -5,4 +5,5 @@ api_model_config = ConfigDict(
     alias_generator=to_camel,
     validate_by_alias=True,
     validate_by_name=True,
+    from_attributes=True,
 )

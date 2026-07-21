@@ -19,7 +19,7 @@ async def main():
                 ip_address=ip_address,
                 last_login=now,
                 expires_at=expires_at,
-            )
+            ),
         )
 
     async for session in get_session():

@@ -4,6 +4,7 @@ from typing import Any
 from pydantic import (
     BaseModel,
     Field,
+    TypeAdapter,
     field_serializer,
     field_validator,
 )
@@ -43,18 +44,6 @@ class TaskIn(BaseModel):
     model_config = api_model_config
 
 
-class PartialTaskIn(TaskIn):
-    title: str | None = Field(min_length=1, max_length=MAX_TITLE_LENGTH, default=None)
-    sub_tasks: list[str] | None = None
-
-    @field_validator("sub_tasks", mode="before")
-    @classmethod
-    def process_tasks(cls, sub_tasks: Any) -> Any:
-        if sub_tasks is None:
-            return []
-        return sub_tasks
-
-
 class TaskOut(BaseModel):
     id: int
     title: str
@@ -71,3 +60,7 @@ class DeletedTaskOut(TaskOut):
         return humanize_expiration(expires_at)
 
     model_config = api_model_config
+
+
+TaskListOut = TypeAdapter(list[TaskOut])
+DeletedTaskListOut = TypeAdapter(list[DeletedTaskOut])

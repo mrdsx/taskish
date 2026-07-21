@@ -19,6 +19,7 @@ export const deletedTaskSchema = taskSchema.extend({
   expiresAt: z.string(),
 });
 
+// TODO: add `dailyTasks`
 export const exportedTasksSchema = z.object({
   tasks: z.array(taskSchema),
   trash: z.array(deletedTaskSchema),

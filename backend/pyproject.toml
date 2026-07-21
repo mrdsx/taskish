@@ -15,3 +15,11 @@ dependencies = [
 
 [tool.fastapi]
 entrypoint = "src.main:app"
+
+[tool.ruff.lint]
+select = ["COM812"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.22",
+]

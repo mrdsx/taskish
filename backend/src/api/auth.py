@@ -21,15 +21,16 @@ router = APIRouter(prefix="/auth")
 security_scheme = HTTPBearer()
 
 
-@router.get("/sessions", response_model=list[AuthSessionOut])
+@router.get("/sessions")
 async def get_sessions(
     auth_session_repository: Annotated[
-        AuthSessionRepository, Depends(AuthSessionRepository)
+        AuthSessionRepository,
+        Depends(AuthSessionRepository),
     ],
     auth_session_service: Annotated[AuthSessionService, Depends(AuthSessionService)],
     session: Annotated[AsyncSession, Depends(get_session)],
     request: Request,
-):
+) -> list[AuthSessionOut]:
     return await auth_session_service.get_all(
         auth_session_repository=auth_session_repository,
         session=session,
@@ -41,7 +42,8 @@ async def get_sessions(
 async def login(
     auth_service: Annotated[AuthService, Depends(AuthService)],
     auth_session_repository: Annotated[
-        AuthSessionRepository, Depends(AuthSessionRepository)
+        AuthSessionRepository,
+        Depends(AuthSessionRepository),
     ],
     auth_session_service: Annotated[AuthSessionService, Depends(AuthSessionService)],
     session: Annotated[AsyncSession, Depends(get_session)],
@@ -63,7 +65,7 @@ async def login(
 
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
     cookie_max_age = timedelta(
-        days=settings.auth_session_expiration_time_days
+        days=settings.auth_session_expiration_time_days,
     ).total_seconds()
     response.set_cookie(
         key=settings.session_token_cookie,
@@ -81,25 +83,27 @@ async def login(
 async def logout(
     auth_service: Annotated[AuthService, Depends(AuthService)],
     auth_session_repository: Annotated[
-        AuthSessionRepository, Depends(AuthSessionRepository)
+        AuthSessionRepository,
+        Depends(AuthSessionRepository),
     ],
     session: Annotated[AsyncSession, Depends(get_session)],
     ip: Annotated[str, Depends(get_ip)],
     request: Request,
-):
+) -> Response:
     session_token = request.cookies.get(settings.session_token_cookie)
     if session_token is None:
         return auth_service.handle_failed_auth(ip)
 
     db_auth_session = await auth_session_repository.fetch_by_token(
-        session_token=session_token, session=session
+        session_token=session_token,
+        session=session,
     )
     if db_auth_session is None:
         return auth_service.handle_failed_auth(ip)
     await auth_session_repository.delete(auth_session=db_auth_session, session=session)
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
     response.delete_cookie(
-        settings.session_token_cookie,
+        key=settings.session_token_cookie,
         secure=True,
         httponly=True,
         samesite="strict",

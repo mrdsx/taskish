@@ -30,6 +30,9 @@ class AuthSessionOut(BaseModel):
     model_config = api_model_config
 
 
+AuthSessionListOut = TypeAdapter(list[AuthSessionOut])
+
+
 class HostGeolocation(BaseModel):
     status: Literal["success"]
     country: str

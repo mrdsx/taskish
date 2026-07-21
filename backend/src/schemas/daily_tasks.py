@@ -1,6 +1,6 @@
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, TypeAdapter, field_validator
 
 from src.schemas.config import api_model_config
 
@@ -44,3 +44,6 @@ class DailyTaskIn(BaseModel):
         return valid_tasks
 
     model_config = api_model_config
+
+
+DailyTaskListOut = TypeAdapter(list[DailyTaskOut])

@@ -17,6 +17,7 @@ from src.core.settings import settings
 from src.db.auth import DB_AuthSession
 from src.repositories.auth import AuthSessionRepository
 from src.schemas.auth import (
+    AuthSessionListOut,
     HostGeolocation,
     HostGeolocationList,
     InvalidHostGeolocation,
@@ -80,10 +81,13 @@ class AuthSessionService:
         hosts = [auth_session.ip_address for auth_session in db_auth_sessions]
         geolocations = await self._fetch_geolocations(ip_list=hosts)
         ip_dict = self._get_ip_dict(geolocations=geolocations, request=request)
-
-        return self._map_auth_sessions(
-            auth_sessions=db_auth_sessions, ip_dict=ip_dict, request=request
+        mapped_sessions = self._map_auth_sessions(
+            auth_sessions=db_auth_sessions,
+            ip_dict=ip_dict,
+            request=request,
         )
+
+        return AuthSessionListOut.validate_python(mapped_sessions)
 
     async def create(
         self,
@@ -105,7 +109,8 @@ class AuthSessionService:
         return session_token
 
     async def _fetch_geolocations(
-        self, ip_list: list[str]
+        self,
+        ip_list: list[str],
     ) -> list[HostGeolocation | InvalidHostGeolocation]:
         cache_key = tuple(ip_list)
         result = cache.get(cache_key)
