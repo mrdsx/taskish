@@ -66,6 +66,7 @@ export function DailyTaskItem(props: { task: DailyTask }) {
       <div class={taskItemStyles.actions}>
         <UpdateDailyTaskDialog task={props.task} />
         <DeleteTaskAlertDialog
+          description="This task will be permanently deleted."
           isDeleting={deleteTaskMutation.isPending}
           deleteTask={handleDeleteTask}
         />

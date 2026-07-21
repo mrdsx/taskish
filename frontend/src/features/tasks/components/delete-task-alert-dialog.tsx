@@ -13,10 +13,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 
-export function DeleteTaskAlertDialog(props: {
+type DeleteTaskAlertDialogProps = {
+  description: string;
   isDeleting: boolean;
   deleteTask: () => void;
-}) {
+};
+
+export function DeleteTaskAlertDialog(props: DeleteTaskAlertDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger as={Button} size="icon" variant="destructive">
@@ -27,10 +30,7 @@ export function DeleteTaskAlertDialog(props: {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete task?</AlertDialogTitle>
-          <AlertDialogDescription>
-            The task will be moved to the trash. You can restore it within 7
-            days until it's permanently deleted.
-          </AlertDialogDescription>
+          <AlertDialogDescription>{props.description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

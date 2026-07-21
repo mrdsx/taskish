@@ -61,6 +61,8 @@ export function TaskItem(props: { task: Task }) {
       <div class={taskItemStyles.actions}>
         <UpdateTaskDialog task={props.task} />
         <DeleteTaskAlertDialog
+          description={`The task will be moved to the trash. You can
+                        restore it within 7 days until it's permanently deleted.`}
           isDeleting={deleteTaskMutation.isPending}
           deleteTask={handleDeleteTask}
         />
