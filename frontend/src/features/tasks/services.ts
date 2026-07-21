@@ -67,7 +67,7 @@ class TaskService {
     }
 
     const response = await fetchApi(`/tasks/${taskId}`, {
-      method: "PATCH",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
