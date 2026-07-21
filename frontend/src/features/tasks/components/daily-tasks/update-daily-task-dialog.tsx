@@ -11,18 +11,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getErrorMessage } from "@/lib/result";
-import { DIALOG_PADDING, queryKeys } from "../constants";
-import { taskService } from "../services";
-import type { Task, TaskIn } from "../types";
-import { SubmitTaskForm } from "./submit-task-form/submit-task-form";
+import { DIALOG_PADDING, queryKeys } from "../../constants";
+import { dailyTaskService } from "../../services";
+import type { DailyTask, DailyTaskIn } from "../../types";
+import { SubmitDailyTaskForm } from "../submit-task-form/submit-daily-task-form";
 
-export function UpdateTaskDialog(props: { task: Task }) {
+export function UpdateDailyTaskDialog(props: { task: DailyTask }) {
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
 
   const queryClient = useQueryClient();
   const updateTaskMutation = createMutation(() => ({
-    mutationFn: async (taskIn: TaskIn): Promise<Task> => {
-      const result = await taskService.updateById(props.task.id, taskIn);
+    mutationFn: async (taskIn: DailyTaskIn): Promise<DailyTask> => {
+      const result = await dailyTaskService.updateById(props.task.id, taskIn);
       if (!result.success) {
         toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to update the task");
@@ -31,14 +31,17 @@ export function UpdateTaskDialog(props: { task: Task }) {
       return result.data;
     },
     onSuccess: (newTask) => {
-      queryClient.setQueryData(queryKeys.tasks, (tasks: Task[]): Task[] => {
-        return tasks.map((task) => {
-          if (task.id === newTask.id) {
-            return newTask;
-          }
-          return task;
-        });
-      });
+      queryClient.setQueryData(
+        queryKeys.dailyTasks,
+        (tasks: DailyTask[]): DailyTask[] => {
+          return tasks.map((task) => {
+            if (task.id === newTask.id) {
+              return newTask;
+            }
+            return task;
+          });
+        },
+      );
       setIsOpen(false);
     },
   }));
@@ -52,11 +55,13 @@ export function UpdateTaskDialog(props: { task: Task }) {
         <DialogHeader class={`px-${DIALOG_PADDING}`}>
           <DialogTitle>Update task</DialogTitle>
         </DialogHeader>
-        <SubmitTaskForm
+        <SubmitDailyTaskForm
+          formType="update"
           isDisabled={updateTaskMutation.isPending}
           defaultValues={{
             title: props.task.title,
             subTasks: props.task.subTasks,
+            completed: props.task.completed,
           }}
           onTaskSubmit={(taskIn) => updateTaskMutation.mutate(taskIn)}
         />

@@ -1,26 +1,31 @@
-import { createSignal } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { FormErrorView } from "@/components/form-error-view";
 import { SubmitButton } from "@/components/submit-button";
 import { arraysEqual } from "@/lib/utils";
 import { DIALOG_PADDING } from "../../constants";
 import { MAX_TITLE_LENGTH } from "../../schemas";
-import type { TaskIn } from "../../types";
+import type { DailyTaskIn } from "../../types";
+import { CompletedField } from "./completed-field";
 import { SubTasksField } from "./sub-tasks-field";
 import { TitleField } from "./title-field";
 
-type SubmitTaskFormProps = {
+type SubmitDailyTaskFormProps = {
+  formType: "create" | "update";
   isDisabled: boolean;
-  defaultValues: TaskIn;
-  onTaskSubmit: (taskIn: TaskIn) => void;
+  defaultValues: DailyTaskIn;
+  onTaskSubmit: (taskIn: DailyTaskIn) => void;
 };
 
-export function SubmitTaskForm(props: SubmitTaskFormProps) {
+export function SubmitDailyTaskForm(props: SubmitDailyTaskFormProps) {
   const [formError, setFormError] = createSignal<string | null>(null);
-  const [newTask, setNewTask] = createStore<TaskIn>({ ...props.defaultValues });
+  const [newTask, setNewTask] = createStore<DailyTaskIn>({
+    ...props.defaultValues,
+  });
   const isNewTaskUnchanged = () =>
     props.defaultValues.title === newTask.title &&
-    arraysEqual(props.defaultValues.subTasks, newTask.subTasks);
+    arraysEqual(props.defaultValues.subTasks, newTask.subTasks) &&
+    props.defaultValues.completed === newTask.completed;
 
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
@@ -30,6 +35,7 @@ export function SubmitTaskForm(props: SubmitTaskFormProps) {
     const subTasks = newTask.subTasks
       .map((subTask) => subTask.trim())
       .filter((subTask) => subTask.length > 0);
+    const completed = newTask.completed;
     if (title.length === 0) {
       setFormError("Empty title");
       return;
@@ -43,9 +49,10 @@ export function SubmitTaskForm(props: SubmitTaskFormProps) {
       return;
     }
 
-    const taskIn: TaskIn = {
+    const taskIn: DailyTaskIn = {
       title,
       subTasks,
+      completed,
     };
     props.onTaskSubmit(taskIn);
   }
@@ -62,6 +69,13 @@ export function SubmitTaskForm(props: SubmitTaskFormProps) {
         disabled={props.isDisabled}
         setNewTask={setNewTask}
       />
+      <Show when={props.formType === "update"}>
+        <CompletedField
+          completed={newTask.completed}
+          disabled={props.isDisabled}
+          setNewTask={setNewTask}
+        />
+      </Show>
       <div class={`px-${DIALOG_PADDING}`}>
         <SubmitButton
           class="w-full"

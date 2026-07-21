@@ -12,6 +12,8 @@ const queryClient = new QueryClient({
       retry: false,
       refetchOnWindowFocus: false,
       refetchOnMount: false,
+      networkMode: "offlineFirst",
+      gcTime: 1000 * 60 * 60 * 24,
     },
   },
 });

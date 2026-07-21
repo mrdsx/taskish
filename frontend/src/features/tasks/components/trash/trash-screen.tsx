@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../../constants";
 import { trashService } from "../../services";
-import { setIsDisplayingTrash } from "../../stores/display-mode";
+import { setActiveScreen } from "../../stores/active-screen";
 import { searchQuery } from "../../stores/search";
 import { ExportTasksButton } from "../export-tasks-button";
 import { LoadingTasksView } from "../loading-tasks-view";
@@ -41,10 +41,7 @@ export function TrashScreen() {
         </Match>
         <Match when={trashQuery.isSuccess}>
           <div class="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsDisplayingTrash(false)}
-            >
+            <Button variant="outline" onClick={() => setActiveScreen("tasks")}>
               <ArrowLeftIcon /> Go back
             </Button>
             <RefreshButton

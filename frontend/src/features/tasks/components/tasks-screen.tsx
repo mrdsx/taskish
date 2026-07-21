@@ -1,22 +1,21 @@
 import { createQuery } from "@tanstack/solid-query";
-import { TrashIcon } from "lucide-solid";
 import { Match, Switch } from "solid-js";
 import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
 import { RefreshButton } from "@/components/refresh-button";
-import { Button } from "@/components/ui/button";
 import type { Task } from "@/features/tasks";
 import { taskService } from "@/features/tasks";
 import { getErrorMessage } from "@/lib/result";
 import { useUserStore } from "@/stores/user";
 import { queryKeys } from "../constants";
-import { setIsDisplayingTrash } from "../stores/display-mode";
 import { searchQuery } from "../stores/search";
 import { AddTaskDialog } from "./add-task-dialog";
+import { DailyTasksButton } from "./daily-tasks/daily-tasks-button";
 import { ExportTasksButton } from "./export-tasks-button";
 import { FilteredTasksView } from "./filtered-tasks-view";
 import { LoadingTasksView } from "./loading-tasks-view";
 import { SearchBar } from "./search-bar";
+import { TrashButton } from "./trash/trash-button";
 
 export function TasksScreen() {
   const setIsAuthenticated = useUserStore((state) => state.setIsAuthenticated);
@@ -34,8 +33,6 @@ export function TasksScreen() {
 
       return result.data;
     },
-    networkMode: "offlineFirst",
-    gcTime: 1000 * 60 * 60 * 24,
   }));
 
   return (
@@ -49,22 +46,17 @@ export function TasksScreen() {
           <LoadingTasksView />
         </Match>
         <Match when={tasksQuery.isSuccess}>
-          <div class="flex flex-wrap justify-between gap-2">
+          <div class="flex flex-col gap-2">
+            <AddTaskDialog />
             <div class="flex flex-wrap gap-2">
-              <AddTaskDialog />
               <RefreshButton
                 isRefreshing={tasksQuery.isRefetching}
                 refresh={tasksQuery.refetch}
               />
               <ExportTasksButton />
+              <DailyTasksButton />
+              <TrashButton />
             </div>
-            <Button
-              variant="outline"
-              onClick={() => setIsDisplayingTrash(true)}
-            >
-              <TrashIcon />
-              Trash
-            </Button>
           </div>
           <FilteredTasksView
             tasks={tasksQuery.data}

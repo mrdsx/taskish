@@ -1,5 +1,5 @@
 import { createQuery } from "@tanstack/solid-query";
-import { LoaderCircle, ShieldIcon } from "lucide-solid";
+import { ShieldIcon } from "lucide-solid";
 import { createSignal, For, Match, Switch } from "solid-js";
 import { toast } from "somoto";
 import { EmptyErrorView } from "@/components/empty-error-view";
@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import { getErrorMessage } from "@/lib/result";
 import { queryKeys } from "../query-keys";
 import { authService } from "../services";
@@ -65,7 +66,7 @@ export function AuthSessionsDialog() {
             <EmptyErrorView retry={authSessionsQuery.refetch} />
           </Match>
           <Match when={authSessionsQuery.isPending}>
-            <LoaderCircle class="my-2 animate-spin justify-self-center" />
+            <Spinner class="my-2 justify-self-center" />
           </Match>
           <Match when={authSessionsQuery.isSuccess}>
             <ul class="max-h-80 space-y-4 overflow-auto">

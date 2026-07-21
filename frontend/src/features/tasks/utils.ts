@@ -1,11 +1,10 @@
 import type { Task } from "@/features/tasks";
-import type { DeletedTask } from "./types";
 
 function trimAndLowerCase(string: string): string {
   return string.trim().toLowerCase();
 }
 
-export function getFilteredTasks<T extends Task | DeletedTask>(
+export function getFilteredTasks<T extends Task>(
   tasks: T[],
   searchQuery: string,
 ): T[] {

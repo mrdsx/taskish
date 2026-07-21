@@ -3,10 +3,10 @@ import {
   CircleCheckIcon,
   CircleXIcon,
   InfoIcon,
-  LoaderCircleIcon,
   TriangleAlertIcon,
 } from "lucide-solid";
 import { Toaster as Sonner } from "somoto";
+import { Spinner } from "./spinner";
 
 export function Toaster(props: Parameters<typeof Sonner>[0]) {
   const { colorMode } = useColorMode();
@@ -20,7 +20,7 @@ export function Toaster(props: Parameters<typeof Sonner>[0]) {
         info: <InfoIcon />,
         warning: <TriangleAlertIcon />,
         error: <CircleXIcon />,
-        loading: <LoaderCircleIcon class="animate-spin" />,
+        loading: <Spinner />,
       }}
       style={{
         "--normal-bg": "var(--popover)",

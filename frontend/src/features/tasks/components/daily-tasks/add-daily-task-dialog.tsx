@@ -11,18 +11,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getErrorMessage } from "@/lib/result";
-import { DIALOG_PADDING, queryKeys } from "../constants";
-import { taskService } from "../services";
-import type { Task, TaskIn } from "../types";
-import { SubmitTaskForm } from "./submit-task-form/submit-task-form";
+import { DIALOG_PADDING, queryKeys } from "../../constants";
+import { dailyTaskService } from "../../services";
+import type { DailyTask, DailyTaskIn } from "../../types";
+import { SubmitDailyTaskForm } from "../submit-task-form/submit-daily-task-form";
 
-export function AddTaskDialog() {
+export function AddDailyTaskDialog() {
   const [isOpen, setIsOpen] = createSignal<boolean>(false);
 
   const queryClient = useQueryClient();
   const addTaskMutation = createMutation(() => ({
-    mutationFn: async (taskIn: TaskIn): Promise<Task> => {
-      const result = await taskService.create(taskIn);
+    mutationFn: async (taskIn: DailyTaskIn): Promise<DailyTask> => {
+      const result = await dailyTaskService.create(taskIn);
       if (!result.success) {
         toast.error(getErrorMessage(result.errorCode));
         throw new Error("Failed to create the task");
@@ -31,9 +31,12 @@ export function AddTaskDialog() {
       return result.data;
     },
     onSuccess: (newTask) => {
-      queryClient.setQueryData(queryKeys.tasks, (tasks: Task[]): Task[] => {
-        return [...tasks, newTask];
-      });
+      queryClient.setQueryData(
+        queryKeys.dailyTasks,
+        (tasks: DailyTask[]): DailyTask[] => {
+          return [...tasks, newTask];
+        },
+      );
       setIsOpen(false);
     },
   }));
@@ -48,11 +51,13 @@ export function AddTaskDialog() {
         <DialogHeader class={`px-${DIALOG_PADDING}`}>
           <DialogTitle>New task</DialogTitle>
         </DialogHeader>
-        <SubmitTaskForm
+        <SubmitDailyTaskForm
+          formType="create"
           isDisabled={addTaskMutation.isPending}
           defaultValues={{
             title: "",
             subTasks: [],
+            completed: false,
           }}
           onTaskSubmit={(taskIn) => addTaskMutation.mutate(taskIn)}
         />
