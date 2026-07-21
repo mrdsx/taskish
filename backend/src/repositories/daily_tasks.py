@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.daily_tasks import DB_DailyTask
@@ -54,3 +54,7 @@ class DailyTaskRepository:
         await session.commit()
 
         return db_task
+
+    async def mark_all_as_not_completed(self, session: AsyncSession) -> None:
+        await session.execute(update(DB_DailyTask).values(completed=False))
+        await session.commit()
