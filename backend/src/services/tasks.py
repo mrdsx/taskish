@@ -20,7 +20,6 @@ class TaskService:
         self,
         task_repository: TaskRepository,
         session: AsyncSession,
-        deleted: Literal[False] = False,
     ) -> list[TaskOut]: ...
 
     @overload
@@ -28,7 +27,15 @@ class TaskService:
         self,
         task_repository: TaskRepository,
         session: AsyncSession,
-        deleted: Literal[True] = True,
+        deleted: Literal[False],
+    ) -> list[TaskOut]: ...
+
+    @overload
+    async def get_all(
+        self,
+        task_repository: TaskRepository,
+        session: AsyncSession,
+        deleted: Literal[True],
     ) -> list[DeletedTaskOut]: ...
 
     async def get_all(
