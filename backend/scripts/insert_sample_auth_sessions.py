@@ -9,7 +9,7 @@ from src.utils.time import get_now
 
 async def main():
     now = get_now()
-    expires_at = now + timedelta(days=settings.auth_session_expiration_time_days)
+    expires_at = now + settings.auth_session_lifespan
     ip_list = ["8.8.8.8", "8.8.8.4"]
     new_auth_sessions: list[DB_AuthSession] = []
     for ip_address in ip_list:

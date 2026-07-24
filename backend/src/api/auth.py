@@ -64,9 +64,7 @@ async def login(
         return auth_service.handle_failed_auth(ip=ip)
 
     response = Response(status_code=status.HTTP_204_NO_CONTENT)
-    cookie_max_age = timedelta(
-        days=settings.auth_session_expiration_time_days,
-    ).total_seconds()
+    cookie_max_age = settings.auth_session_lifespan.total_seconds()
     response.set_cookie(
         key=settings.session_token_cookie,
         value=session_token,

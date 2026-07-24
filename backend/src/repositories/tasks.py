@@ -50,7 +50,8 @@ class TaskRepository:
         if db_task is None:
             return None
 
-        db_task.expires_at = get_now() + timedelta(days=7)
+        # 7 days and 1 hour looks good to me
+        db_task.expires_at = get_now() + timedelta(days=7, hours=1)
         await session.commit()
 
         return db_task

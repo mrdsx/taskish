@@ -39,7 +39,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
         async for session in get_session():
             now = get_now()
-            # TODO: extract to service method
             db_auth_session = await auth_session_repository.fetch_by_token(
                 session_token=session_token,
                 session=session,
@@ -49,12 +48,11 @@ class AuthMiddleware(BaseHTTPMiddleware):
             else:
                 db_auth_session.last_login = now
                 db_auth_session.ip_address = ip
-                if db_auth_session.expires_at - now < timedelta(
-                    days=settings.expiring_auth_session_days,
+                if (
+                    db_auth_session.expires_at - now
+                    < settings.expiring_auth_session_lifespan
                 ):
-                    db_auth_session.expires_at = now + timedelta(
-                        days=settings.auth_session_expiration_time_days,
-                    )
+                    db_auth_session.expires_at = now + settings.auth_session_lifespan
                 await session.commit()
 
         error_result = auth_service.handle_successful_auth(ip)

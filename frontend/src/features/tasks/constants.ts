@@ -1,7 +1,7 @@
 // `spacing` units (see index.css)
 export const DIALOG_PADDING = 6;
 // for optimistic updates
-export const DEFAULT_EXPIRATION_TIME = "expires in 6 days";
+export const DEFAULT_EXPIRATION_TIME = "expires in 1 week";
 
 export const queryKeys = {
   tasks: ["tasks"],

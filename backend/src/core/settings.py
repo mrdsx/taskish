@@ -1,3 +1,4 @@
+from datetime import timedelta
 from pathlib import Path
 from typing import Any, Literal
 
@@ -10,8 +11,14 @@ class Settings(BaseSettings):
 
     password: str
     session_token_cookie: str = "session-token"
-    expiring_auth_session_days: int = 2
-    auth_session_expiration_time_days: int = 7
+
+    @property
+    def auth_session_lifespan(self) -> timedelta:
+        return timedelta(days=7, hours=1)
+
+    @property
+    def expiring_auth_session_lifespan(self) -> timedelta:
+        return timedelta(days=2)
 
     ip_api_url: str = "http://ip-api.com"
 

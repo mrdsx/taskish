@@ -43,7 +43,7 @@ class AuthSessionRepository:
             hash=hashed_token,
             ip_address=ip,
             last_login=now,
-            expires_at=now + timedelta(days=settings.auth_session_expiration_time_days),
+            expires_at=now + settings.auth_session_lifespan,
         )
         session.add(db_auth_session)
         await session.commit()
