@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from argon2 import PasswordHasher
 from fastapi import Request, status
 from fastapi.responses import JSONResponse

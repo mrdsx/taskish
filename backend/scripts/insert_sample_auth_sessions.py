@@ -1,5 +1,4 @@
 import asyncio
-from datetime import timedelta
 
 from src.core.settings import settings
 from src.db import get_session

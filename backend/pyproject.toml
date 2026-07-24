@@ -17,7 +17,10 @@ dependencies = [
 entrypoint = "src.main:app"
 
 [tool.ruff.lint]
-select = ["COM812"]
+extend-select = ["COM812"]
+
+[tool.ruff.format]
+skip-magic-trailing-comma = false
 
 [dependency-groups]
 dev = [

@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Sequence
 
 from sqlalchemy import delete, select

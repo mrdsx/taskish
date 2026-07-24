@@ -1,4 +1,4 @@
-from typing import Any, Literal, overload
+from typing import Literal, overload
 
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
