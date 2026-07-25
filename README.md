@@ -7,8 +7,9 @@ Taskish is a single-user platform for managing tasks.
 ## Required infra
 
 - Frontend (Vercel is suitable)
-- Backend (persistent hosting for cron-jobs)
+- Backend (persistent hosting due to cron-jobs)
 - PostgreSQL
+- File storage (box.com)
 
 ## Roadmap
 
