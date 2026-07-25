@@ -10,7 +10,6 @@ import { queryKeys } from "../../constants";
 import { trashService } from "../../services";
 import { setActiveScreen } from "../../stores/active-screen";
 import { searchQuery } from "../../stores/search";
-import { ExportTasksButton } from "../export-tasks-button";
 import { LoadingTasksView } from "../loading-tasks-view";
 import { SearchBar } from "../search-bar";
 import { FilteredDeletedTasksView } from "./filtered-deleted-tasks-view";
@@ -31,6 +30,14 @@ export function TrashScreen() {
 
   return (
     <>
+      <Button
+        class="w-fit"
+        variant="link"
+        onClick={() => setActiveScreen("tasks")}
+      >
+        <ArrowLeftIcon />
+        Go back
+      </Button>
       <SearchBar disabled={trashQuery.isPending} />
       <Switch>
         <Match when={trashQuery.isError}>
@@ -41,14 +48,10 @@ export function TrashScreen() {
         </Match>
         <Match when={trashQuery.isSuccess}>
           <div class="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => setActiveScreen("tasks")}>
-              <ArrowLeftIcon /> Go back
-            </Button>
             <RefreshButton
               isRefreshing={trashQuery.isRefetching}
               refresh={trashQuery.refetch}
             />
-            <ExportTasksButton />
           </div>
           <FilteredDeletedTasksView
             tasks={trashQuery.data}

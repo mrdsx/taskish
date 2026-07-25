@@ -11,16 +11,10 @@ import {
   dailyTaskInSchema,
   dailyTaskSchema,
   deletedTaskSchema,
-  exportedTasksSchema,
   taskInSchema,
   taskSchema,
 } from "./schemas";
-import type {
-  DailyTask,
-  DailyTaskIn,
-  DeletedTask,
-  ExportedTasks,
-} from "./types";
+import type { DailyTask, DailyTaskIn, DeletedTask } from "./types";
 
 class TaskService {
   public async getAll(): Promise<Result<Task[]>> {
@@ -214,24 +208,6 @@ class TrashService {
   }
 }
 
-class ExportService {
-  public async exportTasksToJSON(): Promise<Result<ExportedTasks>> {
-    const response = await fetchApi("/export/json");
-    if (!response.ok) {
-      return buildErrorResult(getErrorCode(response.status));
-    }
-
-    const data = await response.json();
-    const responseParse = exportedTasksSchema.safeParse(data);
-    if (!responseParse.success) {
-      return buildErrorResult("response_validation_error");
-    }
-
-    return buildSuccessfulResult(responseParse.data);
-  }
-}
-
 export const taskService = new TaskService();
 export const dailyTaskService = new DailyTaskService();
 export const trashService = new TrashService();
-export const exportService = new ExportService();

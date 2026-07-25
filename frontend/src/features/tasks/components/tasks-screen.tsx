@@ -11,7 +11,6 @@ import { queryKeys } from "../constants";
 import { searchQuery } from "../stores/search";
 import { AddTaskDialog } from "./add-task-dialog";
 import { DailyTasksButton } from "./daily-tasks/daily-tasks-button";
-import { ExportTasksButton } from "./export-tasks-button";
 import { FilteredTasksView } from "./filtered-tasks-view";
 import { LoadingTasksView } from "./loading-tasks-view";
 import { SearchBar } from "./search-bar";
@@ -37,7 +36,7 @@ export function TasksScreen() {
 
   return (
     <>
-      <SearchBar disabled={tasksQuery.isPending} />
+      <SearchBar class="mt-11" disabled={tasksQuery.isPending} />
       <Switch>
         <Match when={tasksQuery.isError}>
           <EmptyErrorView retry={tasksQuery.refetch} />
@@ -46,17 +45,14 @@ export function TasksScreen() {
           <LoadingTasksView />
         </Match>
         <Match when={tasksQuery.isSuccess}>
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-wrap gap-2">
             <AddTaskDialog />
-            <div class="flex flex-wrap gap-2">
-              <RefreshButton
-                isRefreshing={tasksQuery.isRefetching}
-                refresh={tasksQuery.refetch}
-              />
-              <ExportTasksButton />
-              <DailyTasksButton />
-              <TrashButton />
-            </div>
+            <RefreshButton
+              isRefreshing={tasksQuery.isRefetching}
+              refresh={tasksQuery.refetch}
+            />
+            <DailyTasksButton />
+            <TrashButton />
           </div>
           <FilteredTasksView
             tasks={tasksQuery.data}

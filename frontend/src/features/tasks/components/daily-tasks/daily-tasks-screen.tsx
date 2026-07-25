@@ -11,7 +11,6 @@ import { dailyTaskService } from "../../services";
 import { setActiveScreen } from "../../stores/active-screen";
 import { searchQuery } from "../../stores/search";
 import type { DailyTask } from "../../types";
-import { ExportTasksButton } from "../export-tasks-button";
 import { LoadingTasksView } from "../loading-tasks-view";
 import { SearchBar } from "../search-bar";
 import { AddDailyTaskDialog } from "./add-daily-task-dialog";
@@ -33,6 +32,14 @@ export function DailyTasksScreen() {
 
   return (
     <>
+      <Button
+        class="w-fit"
+        variant="link"
+        onClick={() => setActiveScreen("tasks")}
+      >
+        <ArrowLeftIcon />
+        Go back
+      </Button>
       <SearchBar disabled={dailyTasksQuery.isPending} />
       <Switch>
         <Match when={dailyTasksQuery.isError}>
@@ -42,22 +49,12 @@ export function DailyTasksScreen() {
           <LoadingTasksView />
         </Match>
         <Match when={dailyTasksQuery.isSuccess}>
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-wrap gap-2">
             <AddDailyTaskDialog />
-            <div class="flex flex-wrap gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setActiveScreen("tasks")}
-              >
-                <ArrowLeftIcon />
-                Go back
-              </Button>
-              <RefreshButton
-                isRefreshing={dailyTasksQuery.isRefetching}
-                refresh={dailyTasksQuery.refetch}
-              />
-              <ExportTasksButton />
-            </div>
+            <RefreshButton
+              isRefreshing={dailyTasksQuery.isRefetching}
+              refresh={dailyTasksQuery.refetch}
+            />
           </div>
           <FilteredDailyTasksView
             tasks={dailyTasksQuery.data}

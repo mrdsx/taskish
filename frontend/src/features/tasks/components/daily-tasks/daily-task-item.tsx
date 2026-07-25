@@ -54,7 +54,7 @@ export function DailyTaskItem(props: { task: DailyTask }) {
               <p
                 class={cx(
                   taskItemStyles.subTask,
-                  props.task.completed && "opacity-60 line-through",
+                  props.task.completed && "line-through opacity-60",
                 )}
               >
                 {subTask}

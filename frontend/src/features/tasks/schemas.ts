@@ -26,9 +26,3 @@ export const dailyTaskSchema = taskSchema.extend({
 export const dailyTaskInSchema = taskInSchema.extend({
   completed: z.boolean(),
 });
-
-export const exportedTasksSchema = z.object({
-  tasks: z.array(taskSchema),
-  dailyTasks: z.array(dailyTaskSchema),
-  trash: z.array(deletedTaskSchema),
-});

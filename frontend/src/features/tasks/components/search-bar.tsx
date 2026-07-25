@@ -1,15 +1,21 @@
 import { XIcon } from "lucide-solid";
-import { Show } from "solid-js";
+import { type ComponentProps, Show } from "solid-js";
 import {
   InputGroup,
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { cx } from "@/lib/utils";
 import { searchQuery, setSearchQuery } from "../stores/search";
 
-export function SearchBar(props: { disabled?: boolean }) {
+type SearchBarProps = Pick<
+  ComponentProps<typeof InputGroup>,
+  "class" | "disabled"
+>;
+
+export function SearchBar(props: SearchBarProps) {
   return (
-    <InputGroup class="shrink-0">
+    <InputGroup class={cx("shrink-0", props.class)}>
       <InputGroupInput
         placeholder="Type your search query..."
         value={searchQuery()}
