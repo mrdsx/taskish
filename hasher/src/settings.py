@@ -1,5 +1,3 @@
-from typing import Literal
-
 from argon2 import Type
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict

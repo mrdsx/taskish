@@ -24,7 +24,7 @@ class AuthSessionOut(BaseModel):
 
     @field_validator("expires_at", mode="after")
     @classmethod
-    def serialize_expiration_field(cls, expires_at: datetime):
+    def serialize_expiration_field(cls, expires_at: datetime) -> str:
         return humanize_expiration(expires_at)
 
     model_config = api_model_config
@@ -33,7 +33,7 @@ class AuthSessionOut(BaseModel):
 AuthSessionListOut = TypeAdapter(list[AuthSessionOut])
 
 
-class HostGeolocation(BaseModel):
+class API_HostGeolocation(BaseModel):
     status: Literal["success"]
     country: str
     country_code: str
@@ -44,11 +44,13 @@ class HostGeolocation(BaseModel):
     model_config = api_model_config
 
 
-class InvalidHostGeolocation(BaseModel):
+class API_InvalidHostGeolocation(BaseModel):
     status: Literal["fail"]
     query: str
 
     model_config = api_model_config
 
 
-HostGeolocationList = TypeAdapter(list[HostGeolocation | InvalidHostGeolocation])
+API_HostGeolocationList = TypeAdapter(
+    list[API_HostGeolocation | API_InvalidHostGeolocation],
+)

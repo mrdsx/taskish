@@ -17,10 +17,10 @@ from src.core.settings import settings
 from src.db.auth import DB_AuthSession
 from src.repositories.auth import AuthSessionRepository
 from src.schemas.auth import (
+    API_HostGeolocation,
+    API_HostGeolocationList,
+    API_InvalidHostGeolocation,
     AuthSessionListOut,
-    HostGeolocation,
-    HostGeolocationList,
-    InvalidHostGeolocation,
 )
 from src.utils.hashing import get_random_hash
 
@@ -111,7 +111,7 @@ class AuthSessionService:
     async def _fetch_geolocations(
         self,
         ip_list: list[str],
-    ) -> list[HostGeolocation | InvalidHostGeolocation]:
+    ) -> list[API_HostGeolocation | API_InvalidHostGeolocation]:
         cache_key = tuple(ip_list)
         result = cache.get(cache_key)
         if result is not None:
@@ -128,14 +128,14 @@ class AuthSessionService:
             raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS)
 
         data = response.json()
-        result = HostGeolocationList.validate_python(data)
+        result = API_HostGeolocationList.validate_python(data)
         cache[cache_key] = result
 
         return result
 
     def _get_ip_dict(
         self,
-        geolocations: list[HostGeolocation | InvalidHostGeolocation],
+        geolocations: list[API_HostGeolocation | API_InvalidHostGeolocation],
         request: Request,
     ) -> dict[str, IpDataDTO]:
         ip_dict: dict[str, IpDataDTO] = {}
