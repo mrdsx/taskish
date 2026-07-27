@@ -1,4 +1,4 @@
-import { createMutation } from "@tanstack/solid-query";
+import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { EyeIcon, EyeOffIcon } from "lucide-solid";
 import { createSignal, Show } from "solid-js";
 import { toast } from "somoto";
@@ -22,6 +22,7 @@ export function AuthForm() {
   const [formError, setFormError] = createSignal<string | null>(null);
   const setIsAuthenticated = useUserStore((state) => state.setIsAuthenticated);
 
+  const queryClient = useQueryClient();
   const authMutation = createMutation(() => ({
     mutationFn: async () => {
       const result = await authService.logIn(password());
@@ -32,6 +33,7 @@ export function AuthForm() {
     },
     onSuccess: () => {
       setIsAuthenticated(true);
+      queryClient.refetchQueries();
     },
   }));
 
