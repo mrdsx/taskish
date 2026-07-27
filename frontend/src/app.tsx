@@ -10,9 +10,9 @@ export function App() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
 
   return (
-    <div class="flex h-screen flex-col">
+    <div class="flex h-screen flex-col p-4">
       <Header />
-      <main class="mx-auto flex min-h-0 w-full max-w-150 flex-col gap-2 px-4 pt-20 pb-8">
+      <main class="mx-auto flex min-h-0 w-full max-w-150 flex-col gap-2 pt-20">
         <Show when={isAuthenticated()}>
           <Switch>
             <Match when={activeScreen() === "tasks"}>
