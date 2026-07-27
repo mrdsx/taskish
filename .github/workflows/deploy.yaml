@@ -2,7 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    paths:
+      - backend/**
+      - frontend/**
   workflow_dispatch:
 
 jobs:
