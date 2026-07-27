@@ -1,5 +1,6 @@
 import httpx
 
+from src.core.settings import settings
 from src.db import get_session
 from src.main import crons
 from src.repositories.auth import AuthSessionRepository
@@ -44,6 +45,9 @@ async def deleted_expired_auth_sessions():
 # every 6 hours
 @crons.cron("0 */6 * * *", max_retries=5)
 async def backup_data():
+    if settings.app_env == "dev":
+        return
+
     export_service = ExportService()
     task_repository = TaskRepository()
     task_service = TaskService()

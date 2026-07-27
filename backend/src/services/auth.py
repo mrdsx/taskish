@@ -1,6 +1,6 @@
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Sequence
 
 import httpx
 from argon2 import PasswordHasher
@@ -67,7 +67,7 @@ class AuthSessionDTO:
 
 
 REQUESTS_LEFT_HEADER = "x-rl"
-cache = TTLCache(maxsize=100, ttl=60 * 60 * 24)
+geolocation_cache = TTLCache(maxsize=100, ttl=60 * 60 * 24)
 
 
 class AuthSessionService:
@@ -79,7 +79,7 @@ class AuthSessionService:
     ):
         db_auth_sessions = await auth_session_repository.fetch_all(session=session)
         hosts = [auth_session.ip_address for auth_session in db_auth_sessions]
-        geolocations = await self._fetch_geolocations(ip_list=hosts)
+        geolocations = await self._get_geolocations(hosts=hosts)
         ip_dict = self._get_ip_dict(geolocations=geolocations, request=request)
         mapped_sessions = self._map_auth_sessions(
             auth_sessions=db_auth_sessions,
@@ -108,30 +108,48 @@ class AuthSessionService:
 
         return session_token
 
+    async def _get_geolocations(
+        self,
+        hosts: list[str],
+    ) -> list[API_HostGeolocation | API_InvalidHostGeolocation]:
+        geolocation_data: dict[
+            str,
+            API_HostGeolocation | API_InvalidHostGeolocation,
+        ] = {}
+        missing_hosts: list[str] = []
+
+        for host in hosts:
+            cached_geolocation = geolocation_cache.get(host)
+            if cached_geolocation is None:
+                missing_hosts.append(host)
+            else:
+                geolocation_data[host] = cached_geolocation  # pyright: ignore[reportArgumentType]
+
+        if len(missing_hosts) > 0:
+            missing_geolocations = await self._fetch_geolocations(hosts=missing_hosts)
+            for geolocation in missing_geolocations:
+                geolocation_cache[geolocation.query] = geolocation
+                geolocation_data[geolocation.query] = geolocation
+
+        return [geolocation for geolocation in geolocation_data.values()]
+
     async def _fetch_geolocations(
         self,
-        ip_list: list[str],
+        hosts: list[str],
     ) -> list[API_HostGeolocation | API_InvalidHostGeolocation]:
-        cache_key = tuple(ip_list)
-        result = cache.get(cache_key)
-        if result is not None:
-            return result  # pyright: ignore[reportReturnType]
-
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
+        async with httpx.AsyncClient() as http_client:
+            response = await http_client.post(
                 f"{settings.ip_api_url}/batch?fields=status,country,countryCode,regionName,city,query",
-                json=ip_list,
+                json=hosts,
             )
 
         requests_left = response.headers.get(REQUESTS_LEFT_HEADER)
         if requests_left == "0":
             raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS)
 
-        data = response.json()
-        result = API_HostGeolocationList.validate_python(data)
-        cache[cache_key] = result
-
-        return result
+        return API_HostGeolocationList.validate_python(
+            response.json(),
+        )
 
     def _get_ip_dict(
         self,
