@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def decline_expiration(amount: int, duration: str):
@@ -10,7 +10,7 @@ def decline_expiration(amount: int, duration: str):
 def humanize_expiration(expires_at: datetime) -> str:
     now = get_now()
     if expires_at.tzinfo is None:
-        expires_at = expires_at.replace(tzinfo=timezone.utc)
+        expires_at = expires_at.replace(tzinfo=UTC)
 
     seconds = int((expires_at - now).total_seconds())
 
@@ -46,4 +46,4 @@ def humanize_expiration(expires_at: datetime) -> str:
 
 
 def get_now() -> datetime:
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)

@@ -9,8 +9,7 @@ export function AuthSessionItemView(props: { authSession: AuthSession }) {
         {authSession.host} - {authSession.location}
       </p>
       <p class="text-muted-foreground text-sm">
-        Last request: {new Date(authSession.lastLogin).toLocaleString()} (
-        {authSession.expiresAt})
+        Last request: {new Date(authSession.lastLogin).toLocaleString()}
       </p>
       <img class="mt-2 rounded" src={authSession.flagUrl} alt="" width={55} />
     </div>

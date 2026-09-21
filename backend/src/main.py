@@ -13,7 +13,7 @@ from src.core.settings import settings
 
 app = FastAPI(lifespan=lifespan)
 crons = Crons(app)
-import src.crons  # noqa: E402, F401
+import src.crons  # noqa: F401
 
 app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 

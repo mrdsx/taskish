@@ -6,5 +6,4 @@ export const authSessionSchema = z.object({
   location: z.string(),
   flagUrl: z.string(),
   lastLogin: z.string(),
-  expiresAt: z.string(),
 });
